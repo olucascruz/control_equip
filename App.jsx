@@ -3,20 +3,11 @@ import { View, Text, StyleSheet} from "react-native"
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from "@react-navigation/native";
 import HomeScreen from "./screens/home/HomeScreen";
+import StudentScreen from "./screens/student/StudentScreen"
 const Tab = createBottomTabNavigator();
 
 
 
-
-function StudentScreen(){
-    return(
-        <View>
-
-            <Text>Hello student</Text>
-        </View>
-        
-        )
-}
 
 function MyTabs() {
   return (

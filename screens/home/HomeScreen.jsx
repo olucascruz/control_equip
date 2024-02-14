@@ -1,28 +1,18 @@
-import { View, Text, TextInput, Button, StyleSheet} from "react-native"
-import { Picker } from "@react-native-picker/picker"
+import { View, Text, Button, StyleSheet} from "react-native"
 import { useState } from "react";
+import BaseInput from "../../components/BaseInput";
 import ListHome from "../../components/ListHome";
+import Header from "../../components/Header";
+import SubjectPicker from "../../components/SubjectPicker";
 export default function HomeScreen(){
-    const [selectedValue, setSelectedValue] = useState('java');
     return(
         <View style={styles.container}>
-            <View style={styles.header}>
-                <Text>Controle de equipamentos</Text>
-            </View>
+            <Header headerTitle={"controle de equipamentos"}/>
             <Text>Disciplinas</Text>
-            <Picker
-            selectedValue={selectedValue}
-            onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
-            style={styles.picker}
-            >
-            <Picker.Item label="Java" value="java" />
-            <Picker.Item label="JavaScript" value="js" />
-            <Picker.Item label="Python" value="python" />
-            <Picker.Item label="C#" value="csharp" />
-            <Picker.Item label="Ruby" value="ruby" />
-            </Picker>
-            <TextInput style={styles.input} placeholder="Buscar aluno"/>
-            <TextInput style={styles.input} placeholder="Buscar computador"/>
+            <SubjectPicker disciplines={[{"name":"Portugues"}]}/>
+        
+            <BaseInput placeholder="Buscar aluno"/>
+            <BaseInput placeholder="Buscar computador"/>
             <Text>Hello World</Text>
             <Button color={"#44ff5d"} title="ok"/>
             <ListHome listComputerLoans={
@@ -38,30 +28,4 @@ const styles = StyleSheet.create({
         backgroundColor: "#ececec",
         alignItems:"center"    
     },
-    header:{
-        display:"flex",
-        alignItems: "center",
-        justifyContent:"center",
-        backgroundColor: "#31d422",
-        height:150,
-        marginTop: -50,
-        marginLeft:"auto",
-        marginRight:"auto",
-        width: 300,
-        borderBottomLeftRadius: 300,
-        borderBottomRightRadius: 300,
-    },
-    input:{
-        backgroundColor:"#fff",
-        width: "70%",
-        borderRadius:5,
-        marginTop:50,
-    },
-    picker: {
-        width: 200,
-        height: 50,
-        marginTop: 10,
-        backgroundColor:"#fff",
-      },
-
 })

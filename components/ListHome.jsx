@@ -4,9 +4,9 @@ export default function ListHome({listComputerLoans}){
     return(
         <View style={styles.container}>
             {
-            listComputerLoans.map((computerLoan)=>{
+            listComputerLoans.map((computerLoan, index)=>{
                 return(
-                <View style={styles.itemList}>
+                <View key={index} style={styles.itemList}>
                     <Text>{computerLoan.student}:{computerLoan.computer}</Text>
                 </View>)    
             
