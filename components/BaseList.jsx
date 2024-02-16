@@ -1,13 +1,13 @@
 import { View, Text, StyleSheet} from "react-native"
 
-export default function ListHome({listComputerLoans}){
+export default function BaseList({listItems}){
     return(
         <View style={styles.container}>
             {
-            listComputerLoans.map((computerLoan, index)=>{
+            listItems.map((item, index)=>{
                 return(
                 <View key={index} style={styles.itemList}>
-                    <Text>{computerLoan.student}:{computerLoan.computer}</Text>
+                    <Text>{item}</Text>
                 </View>)    
             
             })

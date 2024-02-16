@@ -1,9 +1,13 @@
 import { TextInput, StyleSheet } from "react-native"
 
-export default function BaseInput({placeholder}){
+export default function BaseInput({onValueChange, placeholder}){
+    const handleChange = (text) => {
+        onValueChange(text);
+      };
+    
 
     return(
-        <TextInput style={styles.input} 
+        <TextInput onChangeText={handleChange} style={styles.input} 
         placeholder={placeholder}/>
         )
 

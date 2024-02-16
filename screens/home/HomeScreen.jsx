@@ -1,31 +1,38 @@
 import { View, Text, Button, StyleSheet} from "react-native"
-import { useState } from "react";
+import { useState, useRef } from "react";
 import BaseInput from "../../components/BaseInput";
 import ListHome from "../../components/ListHome";
 import Header from "../../components/Header";
 import SubjectPicker from "../../components/SubjectPicker";
+import BaseView from "../../components/BaseView";
 export default function HomeScreen(){
+    const [listComputerLoan, setListComputerLoan] = useState([])
+    const [valueInputStudent, setValueInputStudent] =useState(null)
+    const [valueInputComputer, setValueInputComputer] =useState(null)
+
+
+    const addLoan = ()=>{
+        if (!valueInputStudent && !valueInputComputer) return      
+
+        const computerLoan = {
+            "student": valueInputStudent,
+            "computer": valueInputComputer,
+        }
+
+        setListComputerLoan([...listComputerLoan, computerLoan])
+    }
     return(
-        <View style={styles.container}>
+        <BaseView>
             <Header headerTitle={"controle de equipamentos"}/>
             <Text>Disciplinas</Text>
-            <SubjectPicker disciplines={[{"name":"Portugues"}]}/>
+            <SubjectPicker disciplines={[{"name":"Português"}]}/>
         
-            <BaseInput placeholder="Buscar aluno"/>
-            <BaseInput placeholder="Buscar computador"/>
+            <BaseInput onValueChange={setValueInputStudent} id={"iStudent"} placeholder="Buscar aluno"/>
+            <BaseInput onValueChange={setValueInputComputer} id={"iComputer"} placeholder="Buscar computador"/>
             <Text>Hello World</Text>
-            <Button color={"#44ff5d"} title="ok"/>
-            <ListHome listComputerLoans={
-                [{'student':'lucas', 'computer':'000000'},{'student':'lucas', 'computer':'000000'},{'student':'lucas', 'computer':'000000'}]
-                }/>
-        </View>
+            <Button onPress={addLoan} color={"#44ff5d"} title="ok"/>
+            <ListHome listComputerLoans={listComputerLoan}/>
+        </BaseView>
         )
 }
 
-const styles = StyleSheet.create({
-    container:{
-        flex:1,
-        backgroundColor: "#ececec",
-        alignItems:"center"    
-    },
-})

@@ -1,21 +1,25 @@
-import { View, Text, StyleSheet} from "react-native"
 
-export default function ListHome({listComputerLoans}){
+
+
+export default function StudentList({studentList}){
+
     return(
         <View style={styles.container}>
             {
-            listComputerLoans.map((computerLoan, index)=>{
+            studentList.map((student, index)=>{
                 return(
                 <View key={index} style={styles.itemList}>
-                    <Text>{computerLoan.student}:{computerLoan.computer}</Text>
+                    <Text>{student.name}</Text>
+                    <Text>-</Text>
+                    <Text>{student.code}</Text>
                 </View>)    
             
             })
             }
         </View>
         )
-
 }
+
 
 const styles = StyleSheet.create({
     container:{
@@ -31,6 +35,7 @@ const styles = StyleSheet.create({
         borderColor: 'black', // Define a cor da borda
         width:"100%",    
         alignItems:"center",
+        justifyContent: 'space-between',
     }
 
 })

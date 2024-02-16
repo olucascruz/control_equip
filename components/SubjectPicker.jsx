@@ -17,10 +17,6 @@ export default function SubjectPicker({disciplines}){
                 label={discipline.name } 
                 value={discipline.name} />
             }): null}
-            {/* <Picker.Item label="JavaScript" value="js" />
-            <Picker.Item label="Python" value="python" />
-            <Picker.Item label="C#" value="csharp" />
-            <Picker.Item label="Ruby" value="ruby" /> */}
             </Picker>
             )
 
