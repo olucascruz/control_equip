@@ -22,6 +22,7 @@ function MyTabs() {
   return (
     <Tab.Navigator
     screenOptions={({ route }) => ({
+      headerShown: false,
       tabBarStyle: {
         backgroundColor: 'green',
         borderTopWidth: StyleSheet.hairlineWidth,
