@@ -1,3 +1,9 @@
+## COMO RODAR O PROJETO:
+- abri um emulador android ou conectar o celular com USB
+- use o comando: npm expo start
+- no menu: "a" para abrir para android
+
+
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
 # Getting Started
