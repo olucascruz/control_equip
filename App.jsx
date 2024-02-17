@@ -25,7 +25,10 @@ function MyTabs() {
         
      },
      tabBarIcon: () => null,
-     tabBarLabelStyle: { marginBottom: 15 },
+     tabBarLabelStyle: { 
+      marginBottom: 15,
+      fontSize: 15, // Tamanho da fonte
+     },
      tabBarStyle: {
         height:50,
         backgroundColor: 'green',
