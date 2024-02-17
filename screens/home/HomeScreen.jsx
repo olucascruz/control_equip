@@ -7,6 +7,8 @@ import SubjectPicker from "../../components/SubjectPicker";
 import BaseView from "../../components/BaseView";
 import { textStyles } from "../../components/TextStyles";
 import { buttonStyled, colorAddButton } from "../../components/ButtonStyled";
+import { Ionicons } from '@expo/vector-icons';
+
 
 export default function HomeScreen(){
     const [error, setError] = useState("")
