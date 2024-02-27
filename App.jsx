@@ -5,17 +5,10 @@ import HomeScreen from "./screens/home/HomeScreen";
 import StudentScreen from "./screens/student/StudentScreen"
 import SubjectScreen from "./screens/subject/SubjectScreen";
 import ComputerScreen from "./screens/computer/ComputerScreen";
-import Icon from 'react-native-vector-icons';
 
 const Tab = createBottomTabNavigator();
 function MyTabs() {
 
-  const iconMap = {
-    'Home': 'home',
-    'Student': 'home',
-    'Computer': 'desktop',
-    'Subject': 'book',
-  };
   return (
     <Tab.Navigator
     screenOptions={({ route }) => ({
@@ -39,7 +32,7 @@ function MyTabs() {
       tabBarInactiveBackgroundColor: 'green',
       tabBarActiveBackgroundColor:"#1db436",
       tabBarActiveTintColor: '#4efcd6',//icon active
-      tabBarInactiveTintColor: '#C7C7C7', // icon desativado
+      tabBarInactiveTintColor: '#e7e7e7', // icon desativado
     })}
     >
       <Tab.Screen name="Home" component={HomeScreen} options={{ tabBarLabel: 'Home' }}  />
@@ -50,12 +43,13 @@ function MyTabs() {
     </Tab.Navigator>
   )
 }
+
+
 export default function App(){
     return(
     <NavigationContainer>
         <MyTabs></MyTabs>
     </NavigationContainer>
-    
     )
 }
 
