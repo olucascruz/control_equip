@@ -1,5 +1,6 @@
-import { View, Text, Button, StyleSheet} from "react-native"
-import { useState, useRef } from "react";
+import { View, Text, Button, StyleSheet } from "react-native";
+import { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import BaseInput from "../../components/BaseInput";
 import ListHome from "../../components/ListHome";
 import Header from "../../components/Header";
@@ -7,26 +8,54 @@ import SubjectPicker from "../../components/SubjectPicker";
 import BaseView from "../../components/BaseView";
 import { textStyles } from "../../components/TextStyles";
 import { buttonStyled, colorAddButton } from "../../components/ButtonStyled";
-import { Ionicons } from '@expo/vector-icons';
 
+export default function HomeScreen() {
+  const [error, setError] = useState("");
+  const [listComputerLoan, setListComputerLoan] = useState([]);
+  const [valueInputStudent, setValueInputStudent] = useState(null);
+  const [valueInputComputer, setValueInputComputer] = useState(null);
 
-export default function HomeScreen(){
-    const [error, setError] = useState("")
-    const [listComputerLoan, setListComputerLoan] = useState([])
-    const [valueInputStudent, setValueInputStudent] =useState(null)
-    const [valueInputComputer, setValueInputComputer] =useState(null)
-
-
-    const addLoan = ()=>{
-        if (!valueInputStudent && !valueInputComputer) return      
-
-        const computerLoan = {
-            "student": valueInputStudent,
-            "computer": valueInputComputer,
-        }
-
-        setListComputerLoan([...listComputerLoan, computerLoan])
+  const saveData = async (data) => {
+    try {
+      const jsonValue = JSON.stringify(data);
+      await AsyncStorage.setItem("homeData", jsonValue);
+    } catch (error) {
+      console.error("Error saving data:", error);
     }
+  };
+
+  const loadData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("homeData");
+      return jsonValue != null ? JSON.parse(jsonValue) : [];
+    } catch (error) {
+      console.error("Error loading data:", error);
+      return [];
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const initialData = await loadData();
+      setListComputerLoan(initialData);
+    };
+
+    fetchData();
+  }, []);
+
+  const addLoan = () => {
+    if (!valueInputStudent && !valueInputComputer) return;
+
+    const computerLoan = {
+      student: valueInputStudent,
+      computer: valueInputComputer,
+    };
+
+    const updatedList = [...listComputerLoan, computerLoan];
+    setListComputerLoan(updatedList);
+
+    saveData(updatedList);
+  };
     return(
         <BaseView>
             <Header headerTitle={"Controle de equipamentos"}/>
@@ -45,4 +74,3 @@ export default function HomeScreen(){
         </BaseView>
         )
 }
-

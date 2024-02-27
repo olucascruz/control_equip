@@ -1,56 +1,70 @@
-import { View,  Text, Button} from "react-native"
-import BaseInput from "../../components/BaseInput"
-import BaseList from "../../components/BaseList"
-import { useState, useRef } from "react"
-import Header from "../../components/Header"
-import BaseView from "../../components/BaseView"
-import HourInput from "../../components/HourInput"
-import { textStyles } from "../../components/TextStyles"
+import { View, Text, Button } from "react-native";
+import { useState, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import BaseInput from "../../components/BaseInput";
+import BaseList from "../../components/BaseList";
+import Header from "../../components/Header";
+import BaseView from "../../components/BaseView";
+import HourInput from "../../components/HourInput";
+import { textStyles } from "../../components/TextStyles";
 import { buttonStyled, colorAddButton } from "../../components/ButtonStyled";
 
+export default function SubjectScreen() {
+  const [listSubject, setListSubject] = useState([]);
+  const [valueSubject, setValueSubject] = useState(null);
+  const [startHour, setStartHour] = useState(null);
+  const [endHour, setEndHour] = useState(null);
+  const [error, setError] = useState("");
 
-export default function SubjectScreen(){
-    const [listSubject, setListSubject] = useState([])
-    const [valueSubject, setValueSubject] = useState(null)
-    const [startHour, setStartHour] = useState(null)
-    const [endHour, setEndHour] = useState(null)
-    const [error, setError] = useState("")
-
-    const validateHours = (start, end) => {
-        // Validar os formatos HH:MM
-        const regex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
-        const isValidFormat = regex.test(start) && regex.test(end);
-    
-        // Verificar se o segundo horário é maior que o primeiro
-        if (isValidFormat) {
-          const [startHour, startMinutes] = start.split(':').map(Number);
-          const [endHour, endMinutes] = end.split(':').map(Number);
-          return endHour > startHour || (endHour === startHour && endMinutes > startMinutes);
-        }
-        return false;
-      };
-    const addSubject = () =>{
-        if(!valueSubject || !startHour || !endHour){
-            setError("Campos inválidos")
-            return
-        } 
-        if(!validateHours(startHour, endHour)){
-        setError("Campos de hora inválidos")
-        return 
-        }
-
-
-        const subjectObject = {
-            "name":valueSubject,
-            "startHour": startHour,
-            "endHour": endHour
-        }
-
-        
-
-        setListSubject([...listSubject, subjectObject])
-    
+  const saveData = async (data) => {
+    try {
+      const jsonValue = JSON.stringify(data);
+      await AsyncStorage.setItem("subjectData", jsonValue);
+    } catch (error) {
+      console.error("Error saving data:", error);
     }
+  };
+
+  const loadData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("subjectData");
+      return jsonValue != null ? JSON.parse(jsonValue) : [];
+    } catch (error) {
+      console.error("Error loading data:", error);
+      return [];
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const initialData = await loadData();
+      setListSubject(initialData);
+    };
+
+    fetchData();
+  }, []);
+
+  const addSubject = () => {
+    if (!valueSubject || !startHour || !endHour) {
+      setError("Campos inválidos");
+      return;
+    }
+    if (!validateHours(startHour, endHour)) {
+      setError("Campos de hora inválidos");
+      return;
+    }
+
+    const subjectObject = {
+      name: valueSubject,
+      startHour: startHour,
+      endHour: endHour,
+    };
+
+    const updatedList = [...listSubject, subjectObject];
+    setListSubject(updatedList);
+
+    saveData(updatedList);
+  };
     return(
         <BaseView>
 

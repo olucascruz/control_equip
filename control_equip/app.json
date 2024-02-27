@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "control_equip",
+    "slug": "control_equip",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
