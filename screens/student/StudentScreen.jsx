@@ -29,11 +29,12 @@ export default function StudentScreen(){
     return(
         <BaseView>
             <Header headerTitle={"Estudantes"}/>
+            <Text style={textStyles.label}>Disciplina:</Text>
             <SubjectPicker/>
             <Text style={textStyles.label}>Nome do estudante:</Text>
             <BaseInput 
             onValueChange={setValueInputNameStudent}
-            placeholder={"nome do estudante"}/>
+            placeholder={"Nome do estudante"}/>
 
             <Text style={textStyles.label}>Código do estudante:</Text>
             <BaseInput 

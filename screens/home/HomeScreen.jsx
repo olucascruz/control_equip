@@ -28,9 +28,10 @@ export default function HomeScreen(){
         setListComputerLoan([...listComputerLoan, computerLoan])
     }
     return(
+        
         <BaseView>
             <Header headerTitle={"Controle de equipamentos"}/>
-            <Text style={textStyles.label}>Disciplinas:</Text>
+            <Text style={textStyles.label}>Disciplina:</Text>
             <SubjectPicker disciplines={[{"name":"Português"}]}/>
 
             <Text style={textStyles.label}>Estudante:</Text>
