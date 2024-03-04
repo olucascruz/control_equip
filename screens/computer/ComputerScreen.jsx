@@ -12,8 +12,9 @@ export default function ComputerScreen(){
 
 
     const addComputer = () =>{
-        if(!valueInputComputer)return
-        setListComputer(...listComputer, valueInputComputer)
+        if(!valueInputComputer) return
+        const codeComputer = {"code":valueInputComputer}
+        setListComputer([...listComputer, codeComputer])
     }
     
     return(

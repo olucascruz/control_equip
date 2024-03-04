@@ -5,10 +5,13 @@ import HomeScreen from "./screens/home/HomeScreen";
 import StudentScreen from "./screens/student/StudentScreen"
 import SubjectScreen from "./screens/subject/SubjectScreen";
 import ComputerScreen from "./screens/computer/ComputerScreen";
+import { useEffect } from "react";
+
+import { initDB } from "./storage/db.js";
+
 
 const Tab = createBottomTabNavigator();
 function MyTabs() {
-
   return (
     <Tab.Navigator
     screenOptions={({ route }) => ({
@@ -46,6 +49,9 @@ function MyTabs() {
 
 
 export default function App(){
+    useEffect(()=>{
+      initDB()
+    }, [])
     return(
     <NavigationContainer>
         <MyTabs></MyTabs>
