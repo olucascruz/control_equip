@@ -1,18 +1,17 @@
+import { useState, useContext } from "react"
 import { View,  Text, Button} from "react-native"
 import BaseInput from "../../components/BaseInput"
 import BaseList from "../../components/BaseList"
-import { useState, useEffect } from "react"
 import Header from "../../components/Header"
 import BaseView from "../../components/BaseView"
 import HourInput from "../../components/HourInput"
 import { textStyles } from "../../components/TextStyles"
 import { buttonStyled, colorAddButton } from "../../components/ButtonStyled";
-import { getDBConnection } from "../../storage/db"
-import { addSubject, getSubjects } from "../../storage/subjectRepository"
+import { addSubject } from "../../storage/subjectRepository"
 
+import { dataContext } from "../../contexts/Data"
 export default function SubjectScreen(){
-    const [listSubject, setListSubject] = useState([])
-    const [listSubjectPT, setListSubjectPT] = useState([])
+    const {listSubject, setListSubject} = useContext(dataContext)
 
     const [valueSubject, setValueSubject] = useState(null)
     const [startHour, setStartHour] = useState(null)
@@ -64,12 +63,7 @@ export default function SubjectScreen(){
 
         addSubject(valueSubject, startHour, endHour)
 
-        const newSubjectPT = {
-            name: valueSubject,
-            rangeHour: `${startHour} - ${endHour}`
-        }
-
-        setListSubjectPT([...listSubjectPT, newSubjectPT])
+        subjectObject["id"] = listSubject.length + 1
         setListSubject([...listSubject, subjectObject])
         setError("")
     }

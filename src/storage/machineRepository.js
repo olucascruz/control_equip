@@ -1,12 +1,12 @@
 import {openDatabase} from "./db"
 
 
-export function addMachine(name) {
+export function addMachine(id) {
     const db = openDatabase();
     db.transaction(tx => {
         tx.executeSql(
-            'INSERT INTO Machine (name) VALUES (?)',
-            [name],
+            'INSERT INTO Machine (id) VALUES (?)',
+            [id],
             (tx, results) => {
                 if (results.rowsAffected > 0) {
                     console.log('Máquina adicionada com sucesso!');
@@ -28,13 +28,9 @@ export function getMachines(callback) {
             'SELECT * FROM Machine',
             [],
             (tx, results) => {
-                const machines = [];
-                const len = results.rows.length;
-                for (let i = 0; i < len; i++) {
-                    const row = results.rows.item(i);
-                    machines.push(row);
-                }
-                callback(machines);
+                console.log('Consulta executada com sucesso');
+                const result = results.rows._array;
+                callback(result);
             },
             error => {
                 console.error('Erro ao obter as máquinas:', error);

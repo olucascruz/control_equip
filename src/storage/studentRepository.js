@@ -1,12 +1,12 @@
 import {openDatabase} from "./db"
 
 
-export function addStudent(name) {
+export function addStudent(id, subject, name) {
     const db = openDatabase();
     db.transaction(tx => {
         tx.executeSql(
-            'INSERT INTO Student (name) VALUES (?)',
-            [name],
+            'INSERT INTO Student (id, subject, name) VALUES (?)',
+            [id, subject, name],
             (tx, results) => {
                 if (results.rowsAffected > 0) {
                     console.log('Estudante adicionado com sucesso!');
@@ -29,13 +29,9 @@ export function getStudents(callback) {
             'SELECT * FROM Student',
             [],
             (tx, results) => {
-                const students = [];
-                const len = results.rows.length;
-                for (let i = 0; i < len; i++) {
-                    const row = results.rows.item(i);
-                    students.push(row);
-                }
-                callback(students);
+                console.log('Consulta executada com sucesso');
+                const result = results.rows._array;
+                callback(result);
             },
             error => {
                 console.error('Erro ao obter os estudantes:', error);

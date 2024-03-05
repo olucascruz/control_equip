@@ -30,7 +30,6 @@ export function getSubjects(callback) {
         // Execute a consulta para obter as disciplinas
 
         db.transaction(tx => {
-            console.log('Iniciando transação');
             tx.executeSql(
                 'SELECT * FROM Subject',
                 [],
