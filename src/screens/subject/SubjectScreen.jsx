@@ -20,12 +20,7 @@ export default function SubjectScreen(){
     const [error, setError] = useState("")
 
 
-    useEffect(()=>{        
-        getSubjects(subjects => {
-            console.log('Disciplinas obtidas:', subjects);
-            setListSubject([...subjects]) 
-        });
-    }, [])
+    
 
     const validateHours = (start, end) => {
         // Validar os formatos HH:MM

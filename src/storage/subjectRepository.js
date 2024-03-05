@@ -37,7 +37,6 @@ export function getSubjects(callback) {
                 (tx, results) => {
                     console.log('Consulta executada com sucesso');
                     const result = results.rows._array;
-                    console.log("aqui", result);
                     callback(result)
                 },
                 (tx, error) => {
@@ -45,23 +44,7 @@ export function getSubjects(callback) {
                 }
             );
         });
-
-        // db.transaction(tx => {
-        //     console.log('Iniciando transação');
-        //     tx.executeSql(
-        //         'SELECT * FROM Subject',
-        //         [],
-        //         (tx, results) => {
-        //             console.log('Consulta executada com sucesso');
-        //             const result = results.rows._array;
-        //             console.log("result select subject", result);
-        //             callback(result)
-        //         },
-        //         (tx, error) => {
-        //             console.error('Erro ao executar consulta:', error);
-        //         }
-        //     );
-        // });
+        
     } catch (error) {
         console.error('Erro ao abrir o banco de dados:', error);
     }

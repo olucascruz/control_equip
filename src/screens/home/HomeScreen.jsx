@@ -1,5 +1,5 @@
-import { View, Text, Button, StyleSheet} from "react-native"
-import { useState, useRef } from "react";
+import { View, Text, Button} from "react-native"
+import { useState, useEffect, useContext } from "react";
 import BaseInput from "../../components/BaseInput";
 import ListHome from "../../components/ListHome";
 import Header from "../../components/Header";
@@ -7,15 +7,17 @@ import SubjectPicker from "../../components/SubjectPicker";
 import BaseView from "../../components/BaseView";
 import { textStyles } from "../../components/TextStyles";
 import { buttonStyled, colorAddButton } from "../../components/ButtonStyled";
-import { Ionicons } from '@expo/vector-icons';
+import { dataContext } from "../../contexts/Data";
 
-
-export default function HomeScreen(){
+export default function HomeScreen({ route }){
+    const {listSubject} = useContext(dataContext)
     const [error, setError] = useState("")
     const [listComputerLoan, setListComputerLoan] = useState([])
     const [valueInputStudent, setValueInputStudent] =useState(null)
     const [valueInputComputer, setValueInputComputer] =useState(null)
-
+    useEffect(()=>{
+        
+    },[])
 
     const addLoan = ()=>{
         if (!valueInputStudent && !valueInputComputer) return      
@@ -32,7 +34,7 @@ export default function HomeScreen(){
         <BaseView>
             <Header headerTitle={"Controle de equipamentos"}/>
             <Text style={textStyles.label}>Disciplina:</Text>
-            <SubjectPicker disciplines={[{"name":"Português"}]}/>
+            <SubjectPicker disciplines={listSubject}/>
 
             <Text style={textStyles.label}>Estudante:</Text>
             <BaseInput onValueChange={setValueInputStudent} id={"iStudent"} placeholder="Buscar aluno"/>
