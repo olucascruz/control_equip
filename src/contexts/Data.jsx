@@ -1,11 +1,17 @@
 import { useState, createContext, useEffect} from "react";
 import { getSubjects } from "../storage/subjectRepository";
+import { getMachines } from "../storage/machineRepository";
+import { getStudents } from "../storage/studentRepository";
 import { initDB } from "../storage/db";
 
 export const dataContext = createContext({})
 
 function DataProvider({children}){
     const [listSubject, setListSubject] = useState([])
+    const [listMachine, setListMachine] = useState([])
+    const [listStudent, setListStudent] = useState([])
+
+
     useEffect(()=>{
         // Inicializa o banco de dados criando as tabelas
         initDB()
@@ -19,12 +25,21 @@ function DataProvider({children}){
                 setListSubject(subjects)
                 console.log("my subjects:", subjects)
             })
+
+            getMachines( machines =>{
+                //Define o estado de listMachine o resultado da consulta
+                setListMachine(machines)
+            })
+
+            getStudents(students=>{
+                setListStudent(students)
+            })
         }, 500)  
         
     },[])
 
     return(
-        <dataContext.Provider value={{ listSubject, setListSubject }}>
+        <dataContext.Provider value={{ listSubject, setListSubject, listStudent, setListStudent, listMachine, setListMachine }}>
             {children}
         </dataContext.Provider>
         )

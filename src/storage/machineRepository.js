@@ -1,8 +1,8 @@
-import {openDatabase} from "./db"
+import {getDBConnection} from "./db"
 
 
 export function addMachine(id) {
-    const db = openDatabase();
+    const db = getDBConnection();
     db.transaction(tx => {
         tx.executeSql(
             'INSERT INTO Machine (id) VALUES (?)',
@@ -22,7 +22,7 @@ export function addMachine(id) {
 }
 
 export function getMachines(callback) {
-    const db = openDatabase();
+    const db = getDBConnection();
     db.transaction(tx => {
         tx.executeSql(
             'SELECT * FROM Machine',

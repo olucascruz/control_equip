@@ -9,8 +9,7 @@ import { buttonStyled, colorAddButton } from "../../components/ButtonStyled";
 import { dataContext } from "../../contexts/Data"
 
 export default function StudentScreen(){
-    const {listSubject} = useContext(dataContext)
-    const [listStudents, setListStudent] = useState([])
+    const {listSubject, listStudents, setListStudent} = useContext(dataContext)
     const [valueInputNameStudent, setValueInputNameStudent] = useState(null)
     const [valueInputCodeStudent, setValueInputCodeStudent] = useState(null)
 

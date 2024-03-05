@@ -1,11 +1,11 @@
-import {openDatabase} from "./db"
+import {getDBConnection} from "./db"
 
 
 export function addStudent(id, subject, name) {
-    const db = openDatabase();
+    const db = getDBConnection();
     db.transaction(tx => {
         tx.executeSql(
-            'INSERT INTO Student (id, subject, name) VALUES (?)',
+            'INSERT INTO Student (subject, name) VALUES (?, ?)',
             [id, subject, name],
             (tx, results) => {
                 if (results.rowsAffected > 0) {
@@ -23,7 +23,7 @@ export function addStudent(id, subject, name) {
 
 // Função para obter todos os estudantes da tabela Student
 export function getStudents(callback) {
-    const db = openDatabase();
+    const db = getDBConnection();
     db.transaction(tx => {
         tx.executeSql(
             'SELECT * FROM Student',
