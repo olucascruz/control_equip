@@ -9,7 +9,7 @@ import { textStyles } from "../../components/TextStyles";
 import { buttonStyled, colorAddButton } from "../../components/ButtonStyled";
 import { dataContext } from "../../contexts/Data";
 
-export default function HomeScreen({ route }){
+export default function HomeScreen(){
     const {listSubject} = useContext(dataContext)
     const [error, setError] = useState("")
     const [listComputerLoan, setListComputerLoan] = useState([])

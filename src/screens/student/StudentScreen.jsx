@@ -1,14 +1,15 @@
 import { View, Text, Button } from "react-native"
-import { useState } from "react"
+import { useState, useContext } from "react"
 import Header from "../../components/Header"
 import BaseInput from "../../components/BaseInput"
 import SubjectPicker from "../../components/SubjectPicker"
 import BaseView from "../../components/BaseView"
 import { textStyles } from "../../components/TextStyles";
 import { buttonStyled, colorAddButton } from "../../components/ButtonStyled";
-
+import { dataContext } from "../../contexts/Data"
 
 export default function StudentScreen(){
+    const {listSubject} = useContext(dataContext)
     const [listStudents, setListStudent] = useState([])
     const [valueInputNameStudent, setValueInputNameStudent] = useState(null)
     const [valueInputCodeStudent, setValueInputCodeStudent] = useState(null)
@@ -30,7 +31,7 @@ export default function StudentScreen(){
         <BaseView>
             <Header headerTitle={"Estudantes"}/>
             <Text style={textStyles.label}>Disciplina:</Text>
-            <SubjectPicker/>
+            <SubjectPicker disciplines={listSubject}/>
             <Text style={textStyles.label}>Nome do estudante:</Text>
             <BaseInput 
             onValueChange={setValueInputNameStudent}

@@ -1,14 +1,11 @@
-import { View, Text, StyleSheet} from "react-native"
+import {StyleSheet} from "react-native"
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from "@react-navigation/native";
-import HomeScreen from "./screens/home/HomeScreen";
-import StudentScreen from "./screens/student/StudentScreen"
-import SubjectScreen from "./screens/subject/SubjectScreen";
-import ComputerScreen from "./screens/computer/ComputerScreen";
-import { useEffect } from "react";
-
-import { initDB } from "./storage/db.js";
-
+import HomeScreen from "./src/screens/home/HomeScreen.jsx";
+import StudentScreen from "./src/screens/home/HomeScreen.jsx"
+import SubjectScreen from "./src/screens/subject/SubjectScreen.jsx";
+import ComputerScreen from "./src/screens/computer/ComputerScreen.jsx";
+import DataProvider from "./src/contexts/Data.jsx";
 
 const Tab = createBottomTabNavigator();
 function MyTabs() {
@@ -49,12 +46,11 @@ function MyTabs() {
 
 
 export default function App(){
-    useEffect(()=>{
-      initDB()
-    }, [])
     return(
     <NavigationContainer>
+      <DataProvider>
         <MyTabs></MyTabs>
+      </DataProvider>
     </NavigationContainer>
     )
 }
