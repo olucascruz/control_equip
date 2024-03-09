@@ -2,7 +2,7 @@ import {StyleSheet} from "react-native"
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from "@react-navigation/native";
 import HomeScreen from "./src/screens/home/HomeScreen.jsx";
-import StudentScreen from "./src/screens/home/HomeScreen.jsx"
+import StudentScreen from "./src/screens/student/StudentScreen.jsx"
 import SubjectScreen from "./src/screens/subject/SubjectScreen.jsx";
 import ComputerScreen from "./src/screens/computer/ComputerScreen.jsx";
 import DataProvider from "./src/contexts/Data.jsx";
