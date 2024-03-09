@@ -10,8 +10,9 @@ import { buttonStyled, colorAddButton } from "../../components/ButtonStyled";
 import { addSubject } from "../../storage/subjectRepository"
 
 import { dataContext } from "../../contexts/Data"
+
 export default function SubjectScreen(){
-    const {listSubject, setListSubject} = useContext(dataContext)
+    const {database, listSubject, setListSubject} = useContext(dataContext)
 
     const [valueSubject, setValueSubject] = useState(null)
     const [startHour, setStartHour] = useState(null)
@@ -60,8 +61,10 @@ export default function SubjectScreen(){
             setError("disciplina já existe")
             return
         }
-
-        addSubject(valueSubject, startHour, endHour)
+        console.log("before addSubject")
+        addSubject(database, valueSubject, startHour, endHour, (results)=>{
+            console.log('Item adicionado com sucesso!', results);
+        })
 
         subjectObject["id"] = listSubject.length + 1
         setListSubject([...listSubject, subjectObject])

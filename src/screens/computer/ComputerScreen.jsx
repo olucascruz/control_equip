@@ -10,26 +10,26 @@ import { dataContext } from "../../contexts/Data";
 import { addMachine } from "../../storage/machineRepository";
 
 export default function ComputerScreen(){
-    const {listComputer, setListComputer} = useContext(dataContext)
-    const [valueInputComputer, setValueInputComputer] = useState(null)
+    const {database, listMachine, setListMachine} = useContext(dataContext)
+    const [valueInputMachine, setValueInputMachine] = useState(null)
 
-    const addComputer = () =>{
-        if(!valueInputComputer) return
-        const codeComputer = {"id":valueInputComputer}
-        addMachine(valueInputComputer)
-        setListComputer([...listComputer, codeComputer])
+    const addMachineHandler = () =>{
+        if(!valueInputMachine) return
+        const codeMachine = {"id":valueInputMachine}
+        addMachine(database, valueInputMachine)
+        setListMachine([...listMachine, codeMachine])
     }
     
     return(
         <BaseView>
             <Header headerTitle={"Computadores"}/>
             <Text style={textStyles.label}>Adicione um computador:</Text>
-            <BaseInput onValueChange={setValueInputComputer} placeholder={"Número do computador"}/>
+            <BaseInput onValueChange={setValueInputMachine} placeholder={"Número do computador"}/>
             <View style={buttonStyled.container}>
-            <Button onPress={addComputer} color={colorAddButton}
+            <Button onPress={addMachineHandler} color={colorAddButton}
             title="Adicionar computador"/>
             </View>
-            <BaseList listItems={listComputer}/>
+            <BaseList listItems={listMachine}/>
         </BaseView>
 
     )

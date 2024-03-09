@@ -10,14 +10,12 @@ import { buttonStyled, colorAddButton } from "../../components/ButtonStyled";
 import { dataContext } from "../../contexts/Data";
 
 export default function HomeScreen(){
-    const {listSubject} = useContext(dataContext)
+    const {database, listSubject} = useContext(dataContext)
     const [error, setError] = useState("")
     const [listComputerLoan, setListComputerLoan] = useState([])
     const [valueInputStudent, setValueInputStudent] =useState(null)
     const [valueInputComputer, setValueInputComputer] =useState(null)
-    useEffect(()=>{
-        
-    },[])
+    const [valueInputSubject, setValueInputSubject] = useState(null)
 
     const addLoan = ()=>{
         if (!valueInputStudent && !valueInputComputer) return      
@@ -34,7 +32,7 @@ export default function HomeScreen(){
         <BaseView>
             <Header headerTitle={"Controle de equipamentos"}/>
             <Text style={textStyles.label}>Disciplina:</Text>
-            <SubjectPicker disciplines={listSubject}/>
+            <SubjectPicker disciplines={listSubject} selectedHandler={setValueInputSubject}/>
 
             <Text style={textStyles.label}>Estudante:</Text>
             <BaseInput onValueChange={setValueInputStudent} id={"iStudent"} placeholder="Buscar aluno"/>

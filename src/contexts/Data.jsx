@@ -2,7 +2,7 @@ import { useState, createContext, useEffect} from "react";
 import { getSubjects } from "../storage/subjectRepository";
 import { getMachines } from "../storage/machineRepository";
 import { getStudents } from "../storage/studentRepository";
-import { initDB } from "../storage/db";
+import { initDB, getDBConnection } from "../storage/db";
 
 export const dataContext = createContext({})
 
@@ -10,6 +10,7 @@ function DataProvider({children}){
     const [listSubject, setListSubject] = useState([])
     const [listMachine, setListMachine] = useState([])
     const [listStudent, setListStudent] = useState([])
+    const [database, setDatabase] = useState(null)
 
 
     useEffect(()=>{
@@ -20,26 +21,31 @@ function DataProvider({children}){
         // para dar tempo das tabelas serem criadas se for a primeira
         // vez que o user abre o app
         setTimeout(()=>{
-            getSubjects( subjects => {
+            const db = getDBConnection() 
+            getSubjects(db, subjects => {
                 //Define o estado de listSubject o resultado da consulta
                 setListSubject(subjects)
                 console.log("my subjects:", subjects)
             })
 
-            getMachines( machines =>{
+            getMachines(db, machines =>{
                 //Define o estado de listMachine o resultado da consulta
                 setListMachine(machines)
+                console.log("my machine:", machines)
             })
 
-            getStudents(students=>{
+            getStudents(db, students=>{
                 setListStudent(students)
+                console.log("my student:", students)
             })
-        }, 500)  
+
+            setDatabase(db)
+        }, 700)  
         
     },[])
 
     return(
-        <dataContext.Provider value={{ listSubject, setListSubject, listStudent, setListStudent, listMachine, setListMachine }}>
+        <dataContext.Provider value={{database, listSubject, setListSubject, listStudent, setListStudent, listMachine, setListMachine}}>
             {children}
         </dataContext.Provider>
         )
