@@ -2,13 +2,16 @@ import { Picker } from "@react-native-picker/picker"
 import { StyleSheet } from "react-native";
 import { useState } from "react";
 
-export default function SubjectPicker({disciplines}){
+export default function SubjectPicker({disciplines, selectedHandler}){
     const [selectedValue, setSelectedValue] = useState('java');
-
+    const selectedValueHandler = (itemValue) =>{
+        setSelectedValue(itemValue)
+        selectedHandler(itemValue)
+    }
     return (
         <Picker
             selectedValue={selectedValue}
-            onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+            onValueChange={(itemValue, itemIndex) => selectedValueHandler(itemValue)}
             style={styles.picker}
             >
                 <Picker.Item label="Selecione a disciplina" value="" />
