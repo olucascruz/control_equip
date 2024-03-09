@@ -1,17 +1,17 @@
 import {getDBConnection} from "./db"
 
-export function addSubject(name, startTime, endTime) {
-    // Obtenha uma referência ao banco de dados
-    
-    const db = getDBConnection();
-
+export function addSubject(db, name, startTime, endTime, callback=null) {
     // Execute uma transação para adicionar o item
     db.transaction(tx => {
+        console.log('iniciando adição de item');
         tx.executeSql(
             'INSERT INTO Subject (name, start_time, end_time) VALUES (?, ?, ?)',
             [name, startTime, endTime],
             (tx, results) => {
                 console.log('Item adicionado com sucesso!', results);
+                if(callback){
+                 callback(results)
+                }
             },
             (tx, error) => {
                 console.error('Erro ao adicionar o item:', error);
@@ -21,11 +21,9 @@ export function addSubject(name, startTime, endTime) {
 }
 
 
-export function getSubjects(callback) {
-    console.log('Iniciando getSubjects');
+export function getSubjects(db, callback) {
+
     try {
-        // Obtenha uma referência ao banco de dados
-        const db = getDBConnection();
         console.log('Banco de dados aberto:', db);
         // Execute a consulta para obter as disciplinas
 

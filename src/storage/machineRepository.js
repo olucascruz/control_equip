@@ -1,8 +1,7 @@
 import {getDBConnection} from "./db"
 
 
-export function addMachine(id) {
-    const db = getDBConnection();
+export function addMachine(db, id) {
     db.transaction(tx => {
         tx.executeSql(
             'INSERT INTO Machine (id) VALUES (?)',
@@ -21,9 +20,9 @@ export function addMachine(id) {
     });
 }
 
-export function getMachines(callback) {
-    const db = getDBConnection();
+export function getMachines(db, callback) {
     db.transaction(tx => {
+        console.log("iniciando query machines")
         tx.executeSql(
             'SELECT * FROM Machine',
             [],
