@@ -2,7 +2,7 @@ import { useState, createContext, useEffect} from "react";
 import { getSubjects } from "../storage/subjectRepository";
 import { getMachines } from "../storage/machineRepository";
 import { getStudents } from "../storage/studentRepository";
-import { initDB, getDBConnection } from "../storage/db";
+import { initDB, db } from "../storage/db";
 
 export const dataContext = createContext({})
 
@@ -21,7 +21,6 @@ function DataProvider({children}){
         // para dar tempo das tabelas serem criadas se for a primeira
         // vez que o user abre o app
         setTimeout(()=>{
-            const db = getDBConnection() 
             getSubjects(db, subjects => {
                 //Define o estado de listSubject o resultado da consulta
                 setListSubject(subjects)

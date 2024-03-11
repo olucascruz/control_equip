@@ -1,21 +1,11 @@
 import * as SQLite from 'expo-sqlite'
 
 
-export function getDBConnection() {
-    let db = null
-    try{ 
-        db = SQLite.openDatabase("myDatabase.db")
-    }
-    catch(error){
-        console.log("error openDatabase:", error)
-    }
-    return db
-}
+export const db = SQLite.openDatabase("myDatabase.db")
 
 export function initDB(){
     
     try{
-        const db = getDBConnection()
         if(db){
             
             // Execute consultas SQL para criar tabelas
@@ -61,8 +51,6 @@ export function initDB(){
                     ()=> { console.log('successful transition initDB')
                  
                 })
-
-    db.closeAsync()
     }
     }catch(error){
         console.log("error openDB", error)
