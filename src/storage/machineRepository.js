@@ -1,11 +1,10 @@
-import {getDBConnection} from "./db"
 
 
 export function addMachine(db, id) {
     db.transaction(tx => {
         tx.executeSql(
-            'INSERT INTO Machine (id) VALUES (?)',
-            [id],
+            'INSERT INTO Machine (id, is_available) VALUES (?, ?)',
+            [id,  true],
             (tx, results) => {
                 if (results.rowsAffected > 0) {
                     console.log('Máquina adicionada com sucesso!');
