@@ -1,4 +1,3 @@
-import {getDBConnection} from "./db"
 
 export function addSubject(db, name, startTime, endTime, callback=null) {
     // Execute uma transação para adicionar o item

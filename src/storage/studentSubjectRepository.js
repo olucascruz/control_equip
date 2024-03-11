@@ -1,5 +1,3 @@
-import {getDBConnection} from "./db"
-
 
 export function addStudentToSubject(db, studentId, subjectId) {
 

@@ -1,6 +1,3 @@
-import {getDBConnection} from "./db"
-
-
 export function addStudent(db, id, name) {
     db.transaction(tx => {
         tx.executeSql(
