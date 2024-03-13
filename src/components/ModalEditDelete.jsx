@@ -2,15 +2,27 @@ import { useState } from "react"
 import { View,  Text, Button, Modal, StyleSheet } from "react-native"
 import { textStyles } from "./TextStyles"
 import { buttonStyled, colorAddButton } from "./ButtonStyled";
-import BaseInput from "./BaseInput"
-export default function ModalEditDelete({modalVisible, setModalVisible, textModal, Inputs}){
-      // wait, delete and edit
+export default function ModalEditDelete({modalVisible, setModalVisible, itemSelected, setItemSelected, Inputs, editFunc, deleteFunc}){
+    // wait, delete, edit, finish
     const [stateModal, setStateModal] = useState("wait")
     const hiddenModal = () => {
-        // Aqui você pode fazer o que quiser com o valor do input
         setModalVisible(false);
         setStateModal("wait")
+        setItemSelected(null)
     };
+
+    const handleSubject = (operations) =>{
+        if(operations=="delete")
+        {
+        deleteFunc()
+        }
+        if(operations=="edit")
+        {
+        editFunc()
+        }
+
+        setStateModal("finish")
+    }
 
     return(
         <Modal
@@ -23,7 +35,7 @@ export default function ModalEditDelete({modalVisible, setModalVisible, textModa
                 <View style={styles.modalContent}>
                     {stateModal === "wait" ? (
                     <>
-                        <Text>{textModal}</Text>
+                        <Text>{itemSelected ? itemSelected.content:null}</Text>
                         <View style={styles.modalButtonsView}>
                             <View style={buttonStyled.container}>
                                 <Button onPress={()=>{setStateModal("edit")}} color={colorAddButton} title="Editar"/>
@@ -42,13 +54,33 @@ export default function ModalEditDelete({modalVisible, setModalVisible, textModa
                         
                         {Inputs()}
                         <View style={buttonStyled.container}>
-                            <Button onPress={()=>{}} color={colorAddButton} title="Editar"/>
+                            <Button onPress={()=>{handleSubject("edit")}} color={colorAddButton} title="Editar"/>
                         </View>
                         <View style={buttonStyled.container}>
                             <Button onPress={hiddenModal} color={colorAddButton} title="Cancelar"/>
                         </View>
                     </>
-                    ): null}
+                    ): stateModal === "delete" ?(
+                    <>
+                        <Text style={textStyles.label}>Tem certeza que seja deletar?</Text>
+                        <View style={buttonStyled.container}>
+                            <Button onPress={()=>{handleSubject("delete")}} color={colorAddButton} title="Confirmar"/>
+                        </View>
+                        <View style={buttonStyled.container}>
+                            <Button onPress={hiddenModal} color={colorAddButton} title="Cancelar"/>
+                        </View>
+                    </>
+                    ): stateModal === "finish" ? (
+                        <>
+                           <Text style={textStyles.label}>{itemSelected ?itemSelected.feedback:null}</Text>
+
+                           <View style={buttonStyled.container}>
+                            <Button onPress={hiddenModal} color={colorAddButton} title="OK "/>
+                        </View>
+                        </>
+                        ) : null
+                
+                }
                             
                 </View>
             </View>
