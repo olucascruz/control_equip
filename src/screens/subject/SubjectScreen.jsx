@@ -1,5 +1,5 @@
 import { useState, useContext} from "react"
-import { View,  Text, Button, Alert, Modal, TextInput, StyleSheet } from "react-native"
+import { View, Text, Button } from "react-native"
 import BaseInput from "../../components/BaseInput"
 import BaseList from "../../components/BaseList"
 import Header from "../../components/Header"
@@ -7,9 +7,9 @@ import BaseView from "../../components/BaseView"
 import HourInput from "../../components/HourInput"
 import { textStyles } from "../../components/TextStyles"
 import { buttonStyled, colorAddButton } from "../../components/ButtonStyled";
-import { addSubject } from "../../storage/subjectRepository"
-
+import { addSubject, deleteSubject, updateSubject, getSubjects } from "../../storage/subjectRepository"
 import { dataContext } from "../../contexts/Data"
+import ModalEditDelete from "../../components/ModalEditDelete"
 
 export default function SubjectScreen(){
     const {database, listSubject, setListSubject} = useContext(dataContext)
@@ -17,21 +17,9 @@ export default function SubjectScreen(){
     const [valueSubject, setValueSubject] = useState(null)
     const [startHour, setStartHour] = useState(null)
     const [endHour, setEndHour] = useState(null)
-    const [error, setError] = useState("")
-    const [inputValue, setInputValue] = useState("");   
-    const [textModal, setTextModal] = useState("")
-    // wait, delete and edit
-    const [stateModal, setStateModal] = useState("wait")
-    const handleInputChange = (text) => {
-        setInputValue(text);
-    };
-
-    const handleConfirm = () => {
-        // Aqui você pode fazer o que quiser com o valor do input
-        console.log('Valor do input:', inputValue);
-        setModalVisible(false);
-    };
-
+    const [error, setError] = useState("") 
+    const [itemSelected, setItemSelected] = useState("")
+    
     const validateHours = (start, end) => {
         // Validar os formatos HH:MM
         const regex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
@@ -46,37 +34,44 @@ export default function SubjectScreen(){
         return false;
       };
     
-    const addSubjectHandler = async () =>{
+    const validateSubject = () =>{
         if(!valueSubject || !startHour || !endHour){
-        setError("Campos inválidos")
-        return
-        } 
+            setError("Campos inválidos")
+            return false
+            } 
         if(!validateHours(startHour, endHour)){
             setError("Campos de hora inválidos")
-            return 
+            return false
         }
+        return true
+    }
+
+    const checkIfSubjectExists = (subjectObject)=>{
+        const IsSubjectExists = listSubject.some(object =>
+            object['name'] == subjectObject['name'] || 
+            (object['name'] == subjectObject['name'] &&
+            object['start_time'] == subjectObject['start_time'] &&
+            object['end_time'] == subjectObject['end_time']))
+        return IsSubjectExists
+    }
+    const addSubjectHandler = async () =>{
+        
+        const isValide = validateSubject()
+        if(!isValide) return
         const subjectObject = {
+            "id":listSubject.length + 1,
             "name":valueSubject,
             "start_time": startHour,
             "end_time": endHour
         }
 
-        const objectIsEqual = listSubject.some(object =>
-        object['name'] == subjectObject['name'] || 
-        (object['name'] == subjectObject['name'] &&
-        object['start_time'] == subjectObject['start_time'] &&
-        object['end_time'] == subjectObject['end_time']))
-
-        if(objectIsEqual){
+        const isSubjectExists = checkIfSubjectExists(subjectObject)
+        
+        if(isSubjectExists){
             setError("disciplina já existe")
             return
         }
-        console.log("before addSubject")
-        addSubject(database, valueSubject, startHour, endHour, (results)=>{
-            console.log('Item adicionado com sucesso!', results);
-        })
-
-        subjectObject["id"] = listSubject.length + 1
+        addSubject(database, valueSubject, startHour, endHour)
         setListSubject([...listSubject, subjectObject])
         setError("")
     }
@@ -85,86 +80,83 @@ export default function SubjectScreen(){
         let content = `${subject.name} \n${subject.start_time}-${subject.end_time}`
         return content
     })
+    const ids = listSubject.map((subject)=>{return subject.id})
 
-    const handlerSubject = (content) => {
-        // Alert.alert("click", "click")
+    const handlerSubject = (itemSelected) => {
         setModalVisible(true)
-        setTextModal(content)
+        setItemSelected(itemSelected)
     }
-    return(
-        <BaseView>
-             <Modal
-                visible={modalVisible}
-                animationType="slide"
-                transparent={true}
-                onRequestClose={() => setModalVisible(false)}
-            >
-                <View style={styles.modalContainer}>
-                    <View style={styles.modalContent}>
-                        {/* <TextInput
-                        style={styles.input}
-                        placeholder="Digite algo..."
-                        value={inputValue}
-                        onChangeText={handleInputChange}
-                        /> */}
-                        {stateModal === "wait" ? (
-
-                        <>
-                            <Text>{textModal}</Text>
-                            <View style={styles.modalButtons}>
-                                <Button title="Editar" onPress={handleConfirm} />
-                                <Button title="Deletar" onPress={handleConfirm} />
-                            </View>
-                        </>
-                        ) : stateModal === "edit" ? (<><Text style={textStyles.label}>Adicione a disciplina:</Text>
-                        <BaseInput onValueChange={setValueSubject} placeholder={"Nome da disciplina"}/>
-                        <Text style={textStyles.label}>Hora início:</Text>
-                        <HourInput onValueChange={setStartHour} placeholder={"Hora de inicio ex: 13:30"}/>
-                        <Text style={textStyles.label}>Hora fim:</Text>
-                        <HourInput onValueChange={setEndHour} placeholder={"Hora de fim ex: 18:30"}/>
-                        <Button title="Confirmar" onPress={handleConfirm} />
-                        <Button title="Cancelar" onPress={handleConfirm} />
-                        </>): null}
-                                
-                    </View>
-                </View>
-            </Modal>
-
-            <Header headerTitle={"Disciplina"}/>
-            <Text style={textStyles.label}>Adicione a disciplina:</Text>
+    function Inputs(){
+        return(
+            <>
+            {/* -------- */}
+            
             <BaseInput onValueChange={setValueSubject} placeholder={"Nome da disciplina"}/>
             <Text style={textStyles.label}>Hora início:</Text>
             <HourInput onValueChange={setStartHour} placeholder={"Hora de inicio ex: 13:30"}/>
             <Text style={textStyles.label}>Hora fim:</Text>
             <HourInput onValueChange={setEndHour} placeholder={"Hora de fim ex: 18:30"}/>
+
+            {/* -------- */}
+            </>
+            )
+    }
+    const handleEditSubject = () =>{
+        const isValide = validateSubject()
+        if(!isValide) return
+        const subjectObject = {
+            "id":itemSelected.id,
+            "name":valueSubject,
+            "start_time": startHour,
+            "end_time": endHour
+        }
+
+        const isSubjectExists = checkIfSubjectExists(subjectObject)
+        
+        if(isSubjectExists){
+            setError("disciplina já existe")
+            return
+        }
+        updateSubject(database, itemSelected.id, valueSubject, startHour, endHour, ()=>{
+            itemSelected["feedback"] = "Item atualizado"
+            setItemSelected(itemSelected)
+            getSubjects(database, (subjects)=>{
+                setListSubject(subjects)
+            })
+        })
+    }
+    
+    const handleDeleteSubject = () =>{
+        deleteSubject(database, itemSelected.id,()=>{
+            itemSelected["feedback"] = "Item deletado"
+            setItemSelected(itemSelected)
+            getSubjects(database, (subjects)=>{
+                setListSubject(subjects)
+            })
+        })
+    }
+
+    return(
+        <BaseView>
+            <ModalEditDelete 
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+            itemSelected={itemSelected}
+            setItemSelected={setItemSelected}
+            Inputs={Inputs}
+            editFunc={()=>{handleEditSubject()}}
+            deleteFunc={()=>{handleDeleteSubject()}}/>
+            <Header headerTitle={"Disciplina"}
+            />
+            <Text style={textStyles.label}>Adicione a disciplina:</Text>
+            
+            {Inputs()}
+
             <View style={buttonStyled.container}>
                 <Button onPress={addSubjectHandler} color={colorAddButton} title="Adicionar disciplina"/>
             </View>
             <Text style={textStyles.error}>{error}</Text>
-            <BaseList listItems={listSubjectFormatted} customAlert={handlerSubject}/>
+            <BaseList listItems={listSubjectFormatted} customFunc={handlerSubject} ids={ids}/>
         </BaseView>
     )
 }
-const styles = StyleSheet.create({
-    modalContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        
-    },
-    modalContent: {
-        backgroundColor: 'white',
-        padding: 20,
-        borderRadius: 10,
-        elevation: 5,
-        height:"25%",
-        width: "60%"
-    },
-    modalButtons:{
-        flex:1,
-        alignItems:"flex-end",
-        justifyContent:"space-between",
-        flexDirection:"row",
-    }
-})

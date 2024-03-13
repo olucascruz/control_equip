@@ -45,3 +45,42 @@ export function getSubjects(db, callback) {
         console.error('Erro ao abrir o banco de dados:', error);
     }
 }
+
+
+export function deleteSubject(db, subjectId, callback = null) {
+    db.transaction(tx => {
+        console.log('Iniciando exclusão de item');
+        tx.executeSql(
+            'DELETE FROM Subject WHERE id = ?',
+            [subjectId],
+            (tx, results) => {
+                console.log('Item excluído com sucesso!', results);
+                if (callback) {
+                    callback(results);
+                }
+            },
+            (tx, error) => {
+                console.error('Erro ao excluir o item:', error);
+            }
+        );
+    });
+}
+
+export function updateSubject(db, subjectId, newName, newStartTime, newEndTime, callback = null) {
+    db.transaction(tx => {
+        console.log('Iniciando atualização de item');
+        tx.executeSql(
+            'UPDATE Subject SET name = ?, start_time = ?, end_time = ? WHERE id = ?',
+            [newName, newStartTime, newEndTime, subjectId],
+            (tx, results) => {
+                console.log('Item atualizado com sucesso!', results);
+                if (callback) {
+                    callback(results);
+                }
+            },
+            (tx, error) => {
+                console.error('Erro ao atualizar o item:', error);
+            }
+        );
+    });
+}
