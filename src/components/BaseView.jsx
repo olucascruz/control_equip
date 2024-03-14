@@ -16,7 +16,6 @@ export default function BaseView({children}){
 const styles = StyleSheet.create({
     container:{
         flex:1,
-        backgroundColor: "#ececec",
         alignItems:"center"  
     },
 })
