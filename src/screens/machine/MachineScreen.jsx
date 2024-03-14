@@ -1,20 +1,28 @@
-import { View,  Text, Button} from "react-native"
-import BaseInput from "../../components/BaseInput"
-import BaseList from "../../components/BaseList"
-import { useState, useContext } from "react"
-import Header from "../../components/Header";
+// core react
+import { useState, useContext} from "react"
+import { View,  Text, Button, TextInput} from "react-native"
+
+// Components
 import BaseView from "../../components/BaseView";
+import BaseList from "../../components/BaseList"
+import Header from "../../components/Header";
+import ModalEditDelete from "../../components/ModalEditDelete"
+
+// Styled
+import {inputStyled} from "../../components/InputStyled"
 import { textStyles } from "../../components/TextStyles";
 import { buttonStyled, colorAddButton } from "../../components/ButtonStyled";
+
+// storage and data
 import { dataContext } from "../../contexts/Data";
 import { addMachine, deleteMachine, getMachines } from "../../storage/machineRepository";
-import ModalEditDelete from "../../components/ModalEditDelete"
 
 export default function MachineScreen(){
     const {database, listMachine, setListMachine} = useContext(dataContext)
-    const [valueInputMachine, setValueInputMachine] = useState(null)
     const [modalVisible, setModalVisible] = useState(false);
-    const [itemSelected, setItemSelected] = useState("")
+    const [valueInputMachine, setValueInputMachine] = useState("")
+    const [itemSelected, setItemSelected] = useState({})
+     
 
     const addMachineHandler = () =>{
         if(!valueInputMachine) return
@@ -28,12 +36,7 @@ export default function MachineScreen(){
         return content
     })
     const ids = listMachine.map((machine)=>{return machine.id})
-    const Inputs = ()=>{
-        return(
-            <BaseInput onValueChange={setValueInputMachine} placeholder={"Número do computador"}/>
-            )
     
-    }
     const onClickItemList = (itemSelected) => {
         setModalVisible(true)
         setItemSelected(itemSelected)
@@ -41,12 +44,12 @@ export default function MachineScreen(){
 
     const handleDeleteMachine = () =>{
         deleteMachine(database, itemSelected.id, ()=>{
+            itemSelected["feedback"] = "item deletado com sucesso"
+            setItemSelected(itemSelected)
             getMachines(database, machines =>{
-                setListMachine(machines)
-                itemSelected["feedback"] = "item deletado com sucesso"
-                setItemSelected(itemSelected)
+                setListMachine(machines)    
            })   
-        })
+    })
     
     }
     return(
@@ -60,15 +63,24 @@ export default function MachineScreen(){
             
             <Header headerTitle={"Computadores"}/>
             <Text style={textStyles.label}>Adicione um computador:</Text>
-            <Inputs/>
+            <TextInput 
+            style={inputStyled.input} 
+            value={valueInputMachine}
+            onChangeText={text=>setValueInputMachine(text)} 
+            placeholder={"Número do computador"}
+            keyboardType="numeric"
+            />
             <View style={buttonStyled.container}>
-            <Button onPress={addMachineHandler} color={colorAddButton}
-            title="Adicionar computador"/>
+                <Button 
+                onPress={addMachineHandler}
+                color={colorAddButton}
+                title="Adicionar computador"/>
             </View>
             <BaseList 
             listItems={listMachineFormatted}
             customFunc={onClickItemList}
-            ids={ids}/>
+            ids={ids}
+            />
         </BaseView>
 
     )
