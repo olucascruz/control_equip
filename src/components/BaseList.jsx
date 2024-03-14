@@ -1,32 +1,25 @@
-import { View, Text, StyleSheet} from "react-native"
+import { View, Text, TouchableOpacity, Alert, StyleSheet} from "react-native"
 
-export default function BaseList({listItems, showKey=false}){
-    const getContent = (object) =>{
-        const keys = Object.keys(object)
-        let content = ''
-        keys.forEach(key => {
-            if(showKey){
-                content += `${key}: ${object[key]} \n`
-            }else{
-                content += `${object[key]} \n`
-            }
-        });
-        return content
+export default function BaseList({listItems, customFunc = null, ids=null}){
+    const handleItemClick = (item, id) =>{
+        const itemSelected = {content:item, id:id}
+        if(customFunc) customFunc(itemSelected)
     }
-
     return(
         <View style={styles.container}>
             {
             listItems.map((item, index)=>{
                 return(
-                <View key={index} style={styles.itemList}>
-                    <Text>{getContent(item)}</Text>
-                </View>)    
+                <TouchableOpacity key={index} style={styles.itemList} onPress={() => handleItemClick(item, ids[index])}>
+                <View >
+                    <Text style={styles.textItemList}>{item}</Text>
+                </View>
+                </TouchableOpacity>
+                )    
             })
             }
         </View>
         )
-
 }
 
 const styles = StyleSheet.create({
@@ -43,13 +36,16 @@ const styles = StyleSheet.create({
         width: "100%",
         height:"auto",
         alignItems: "center",
-        borderTopWidth: 0, // Define apenas a largura da borda superior
-        borderLeftWidth: 0, // Remove a borda esquerda
-        borderRightWidth: 0, // Remove a borda direita
-        paddingVertical: 10, // Adiciona espaço interno vertical
-        paddingHorizontal: 20, // Adiciona espaço interno horizontal
+        borderTopWidth: 0,
+        borderLeftWidth: 0,
+        borderRightWidth: 0,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
         borderColor: 'gray',
         marginVertical: 5,
+    },
+    textItemList:{
+        fontWeight:"500"
     }
 
 })
