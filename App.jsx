@@ -4,7 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import HomeScreen from "./src/screens/home/HomeScreen.jsx";
 import StudentScreen from "./src/screens/student/StudentScreen.jsx"
 import SubjectScreen from "./src/screens/subject/SubjectScreen.jsx";
-import ComputerScreen from "./src/screens/computer/ComputerScreen.jsx";
+import MachineScreen from "./src/screens/machine/MachineScreen.jsx";
 import DataProvider from "./src/contexts/Data.jsx";
 
 const Tab = createBottomTabNavigator();
@@ -37,7 +37,7 @@ function MyTabs() {
     >
       <Tab.Screen name="Home" component={HomeScreen} options={{ tabBarLabel: 'Home' }}  />
       <Tab.Screen name="Student" component={StudentScreen} options={{ tabBarLabel: 'Estudante' }}/>
-      <Tab.Screen name="Computer" component={ComputerScreen} options={{ tabBarLabel: 'Computador' }} />
+      <Tab.Screen name="Machine" component={MachineScreen} options={{ tabBarLabel: 'Computador' }} />
       <Tab.Screen name="Subject" component={SubjectScreen} options={{ tabBarLabel: 'Disciplina' }} />
 
     </Tab.Navigator>
