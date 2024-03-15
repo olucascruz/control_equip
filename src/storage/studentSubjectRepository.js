@@ -3,7 +3,7 @@ export function addStudentToSubject(db, studentId, subjectId) {
 
     db.transaction(tx => {
         tx.executeSql(
-            'INSERT INTO StudentSubject (student, subject) VALUES (?, ?)',
+            'INSERT INTO Student_Subject (student, subject) VALUES (?, ?)',
             [studentId, subjectId],
             (tx, results) => {
                 if (results.rowsAffected > 0) {
@@ -13,7 +13,7 @@ export function addStudentToSubject(db, studentId, subjectId) {
                 }
             },
             error => {
-                console.error('Erro ao adicionar o estudante:', error);
+                console.error('Erro ao adicionar o estudante a disciplina:', error);
             }
         );
     });
