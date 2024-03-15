@@ -1,15 +1,18 @@
 import { useState, useContext} from "react"
-import { View, Text, Button } from "react-native"
-import BaseInput from "../../components/BaseInput"
+import { View, Text, Button, TextInput } from "react-native"
+
 import BaseList from "../../components/BaseList"
 import Header from "../../components/Header"
 import BaseView from "../../components/BaseView"
 import HourInput from "../../components/HourInput"
+import ModalEditDelete from "../../components/ModalEditDelete"
+
+import {inputStyled} from "../../components/InputStyled"
 import { textStyles } from "../../components/TextStyles"
 import { buttonStyled, colorAddButton } from "../../components/ButtonStyled";
+
 import { addSubject, deleteSubject, updateSubject, getSubjects } from "../../storage/subjectRepository"
 import { dataContext } from "../../contexts/Data"
-import ModalEditDelete from "../../components/ModalEditDelete"
 
 export default function SubjectScreen(){
     const {database, listSubject, setListSubject} = useContext(dataContext)
@@ -20,6 +23,12 @@ export default function SubjectScreen(){
     const [error, setError] = useState("") 
     const [itemSelected, setItemSelected] = useState("")
     
+    const cleanInputs = () =>{
+        setValueSubject("")
+        setStartHour("")
+        setEndHour("")
+        setError("")
+    }
     const validateHours = (start, end) => {
         // Validar os formatos HH:MM
         const regex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
@@ -82,26 +91,38 @@ export default function SubjectScreen(){
     })
     const ids = listSubject.map((subject)=>{return subject.id})
 
-    const handlerSubject = (itemSelected) => {
+    const onClickItemList = (itemSelected) => {
         setModalVisible(true)
+        cleanInputs()
         setItemSelected(itemSelected)
     }
     function Inputs(){
         return(
             <>
             {/* -------- */}
+            <Text style={textStyles.error}>{error}</Text>
             
-            <BaseInput onValueChange={setValueSubject} placeholder={"Nome da disciplina"}/>
+            <TextInput
+             style={inputStyled.input}
+             value={valueSubject}
+             onChangeText={setValueSubject} 
+             placeholder={"Nome da disciplina"}/>
             <Text style={textStyles.label}>Hora início:</Text>
-            <HourInput onValueChange={setStartHour} placeholder={"Hora de inicio ex: 13:30"}/>
+            <HourInput
+            value={startHour} 
+            onValueChange={setStartHour} 
+            placeholder={"Hora de inicio ex: 13:30"}/>
             <Text style={textStyles.label}>Hora fim:</Text>
-            <HourInput onValueChange={setEndHour} placeholder={"Hora de fim ex: 18:30"}/>
+            <HourInput
+            value={endHour} 
+            onValueChange={setEndHour} 
+            placeholder={"Hora de fim ex: 18:30"}/>
 
             {/* -------- */}
             </>
             )
     }
-    const handleEditSubject = () =>{
+    const handleEditSubject = (setStateModal) =>{
         const isValide = validateSubject()
         if(!isValide) return
         const subjectObject = {
@@ -117,6 +138,8 @@ export default function SubjectScreen(){
             setError("disciplina já existe")
             return
         }
+
+        setStateModal("finish")
         updateSubject(database, itemSelected.id, valueSubject, startHour, endHour, ()=>{
             itemSelected["feedback"] = "Item atualizado"
             setItemSelected(itemSelected)
@@ -144,10 +167,14 @@ export default function SubjectScreen(){
             itemSelected={itemSelected}
             setItemSelected={setItemSelected}
             Inputs={Inputs}
-            editFunc={()=>{handleEditSubject()}}
-            deleteFunc={()=>{handleDeleteSubject()}}/>
-            <Header headerTitle={"Disciplina"}
+            editFunc={handleEditSubject}
+            deleteFunc={handleDeleteSubject}
+            cleanCallback={cleanInputs}
             />
+            
+            
+            <Header headerTitle={"Disciplina"}/>
+
             <Text style={textStyles.label}>Adicione a disciplina:</Text>
             
             {Inputs()}
@@ -155,8 +182,10 @@ export default function SubjectScreen(){
             <View style={buttonStyled.container}>
                 <Button onPress={addSubjectHandler} color={colorAddButton} title="Adicionar disciplina"/>
             </View>
-            <Text style={textStyles.error}>{error}</Text>
-            <BaseList listItems={listSubjectFormatted} customFunc={handlerSubject} ids={ids}/>
+            <BaseList
+            listItems={listSubjectFormatted}
+            customFunc={onClickItemList}
+            ids={ids}/>
         </BaseView>
     )
 }
