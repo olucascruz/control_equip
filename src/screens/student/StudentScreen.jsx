@@ -81,7 +81,13 @@ export default function StudentScreen(){
             />
             <Header headerTitle={"Estudantes"}/>
             <Text style={textStyles.label}>Disciplina:</Text>
-            <SubjectPicker disciplines={listSubject}  selectedHandler={setValueInputSubject}/>
+            {listStudent.length > 0 ?
+             <SubjectPicker disciplines={listSubject}  selectedHandler={setValueInputSubject}/>
+             :
+             <View style={buttonStyled.container}>
+                <Button onPress={()=>{navigation.navigate("Subject")}} color={colorAddButton} title="Registrar disciplina"/>
+            </View>}
+            
             <Text style={textStyles.label}>Nome do estudante:</Text>
             <TextInput style={inputStyled.input} 
             onChangeText={setValueInputNameStudent}
@@ -94,9 +100,11 @@ export default function StudentScreen(){
             keyboardType="numeric"/>
             
             <View style={buttonStyled.container} >
-                <Button onPress={addStudentHandler}
-                        color={colorAddButton}
-                        title="adicionar estudante"/>
+                <Button
+                disabled={listStudent.length < 1} 
+                onPress={addStudentHandler}
+                color={colorAddButton}
+                title="adicionar estudante"/>
             </View>
             <BaseList 
             listItems={listStudentFormatted} 
