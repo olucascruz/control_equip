@@ -1,4 +1,4 @@
-export function addStudent(db, id, name) {
+export function addStudent(db, id, name, callback=null) {
     db.transaction(tx => {
         tx.executeSql(
             'INSERT INTO Student (id, name) VALUES (?, ?)',
@@ -6,6 +6,7 @@ export function addStudent(db, id, name) {
             (tx, results) => {
                 if (results.rowsAffected > 0) {
                     console.log('Estudante adicionado com sucesso!');
+                    if(callback)callback()
                 } else {
                     console.log('Falha ao adicionar o estudante.');
                 }
@@ -33,4 +34,30 @@ export function getStudents(db, callback) {
             }
         );
     });
+}
+
+export function deleteStudent(db, studentId, callback=null){
+    
+    db.transaction(tx=>{
+        console.log("init transition")
+        tx.executeSql('DELETE FROM Student WHERE id = ?',
+        [studentId],
+        (tx, results)=>{ 
+            if (results.rowsAffected > 0) {
+                console.log('Estudante deletado com sucesso!');
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            } else {
+            console.log('Falha ao deletar o estudante.');
+            }
+            console.log("end delete student")
+        },
+        error=>{console.error("Erro ao deletar estudante", error)}
+        
+        )    
+    
+    }, error =>{console.error("Error transition delete student: ",error)},
+        ()=>{console.log("successful")})
+
 }

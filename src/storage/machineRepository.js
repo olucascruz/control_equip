@@ -36,3 +36,28 @@ export function getMachines(db, callback) {
         );
     });
 }
+
+export function deleteMachine(db, machineId, callback=null){
+    db.transaction(tx=>{
+        
+        tx.executeSql("DELETE FROM Machine WHERE id = ?",
+        [machineId],
+        (tx, results)=>{
+            if (results.rowsAffected > 0) {
+                console.log('Máquina deletada com sucesso!');
+                if (callback) {
+                    callback();
+                }
+            } else {
+                console.log('Falha ao deletar a máquina.');
+            }
+        },
+        error =>{ console.error("Erro ao deletar máquina") }
+
+        )
+    
+    })
+
+
+
+}
