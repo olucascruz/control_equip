@@ -14,7 +14,6 @@ export default function SubjectPicker({disciplines, selectedHandler}){
             onValueChange={(itemValue, itemIndex) => selectedValueHandler(itemValue)}
             style={styles.picker}
             >
-                <Picker.Item label="Selecione a disciplina" value="" />
             {disciplines ? disciplines.map((discipline, index)=>{
                 return <Picker.Item key={`${index}_${discipline}`} 
                 label={discipline.name } 
