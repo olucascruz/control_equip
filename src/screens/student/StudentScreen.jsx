@@ -28,13 +28,29 @@ export default function StudentScreen(){
     const [valueInputCodeStudent, setValueInputCodeStudent] = useState(null)
     const [valueInputSubject, setValueInputSubject] = useState(null)
     const [modalVisible, setModalVisible] = useState(false);
+    const [error, setError] = useState("")
     const [itemSelected, setItemSelected] = useState("")
-
+    const errorFieldInvalideString = "Campos inválidos"
+    const errorInvalideCodeString = "Campo matrícula inválido"
     
     const addStudentHandler = () =>{
         if( !valueInputSubject ||
             !valueInputNameStudent || 
-            !valueInputCodeStudent ) return 
+            !valueInputCodeStudent ) {
+                setError()
+                return
+            } 
+        
+        if(valueInputCodeStudent.length < 10){ 
+            setError(errorInvalideCodeString)
+            return
+        }
+
+        if (! /^\d+$/.test(numericValue)) {
+            setError(errorInvalideCodeString)
+            return
+        }
+
 
         const newStudent = {
             "id": valueInputCodeStudent,
@@ -80,6 +96,7 @@ export default function StudentScreen(){
             deleteFunc={handleDeleteStudent}
             />
             <Header headerTitle={"Estudantes"}/>
+            <Text style={textStyles.error}>{error}</Text>
             <Text style={textStyles.label}>Disciplina:</Text>
             {listStudent.length > 0 ?
              <SubjectPicker disciplines={listSubject}  selectedHandler={setValueInputSubject}/>
@@ -97,7 +114,9 @@ export default function StudentScreen(){
             <TextInput style={inputStyled.input}
             onChangeText={setValueInputCodeStudent}
             placeholder={"Número de matrícula"}
-            keyboardType="numeric"/>
+            keyboardType="numeric"
+            maxLength={10}
+            />
             
             <View style={buttonStyled.container} >
                 <Button

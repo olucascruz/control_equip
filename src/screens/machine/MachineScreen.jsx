@@ -22,10 +22,23 @@ export default function MachineScreen(){
     const [modalVisible, setModalVisible] = useState(false);
     const [valueInputMachine, setValueInputMachine] = useState("")
     const [itemSelected, setItemSelected] = useState({})
-     
+    const [error, setError] = useState("")
+    const errorInvalideCodeString = "Código invalido"
 
     const addMachineHandler = () =>{
-        if(!valueInputMachine) return
+        if(!valueInputMachine) {
+            setError(errorInvalideCodeString)   
+            return
+        }
+        if(valueInputMachine.length < 10){
+            setError(errorInvalideCodeString)   
+            return
+        }
+
+        if (! /^\d+$/.test(numericValue)) {
+            setError(errorInvalideCodeString)
+            return
+        }
         const codeMachine = {"id":valueInputMachine}
         addMachine(database, valueInputMachine)
         setListMachine([...listMachine, codeMachine])
@@ -62,6 +75,7 @@ export default function MachineScreen(){
             deleteFunc={handleDeleteMachine}/>
             
             <Header headerTitle={"Computadores"}/>
+            <Text style={textStyles.error}>{error}</Text>
             <Text style={textStyles.label}>Adicione um computador:</Text>
             <TextInput 
             style={inputStyled.input} 
@@ -69,6 +83,7 @@ export default function MachineScreen(){
             onChangeText={text=>setValueInputMachine(text)} 
             placeholder={"Número do computador"}
             keyboardType="numeric"
+            maxLength={10}
             />
             <View style={buttonStyled.container}>
                 <Button 
