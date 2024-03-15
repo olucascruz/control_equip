@@ -4,7 +4,7 @@ export function addMachine(db, id) {
     db.transaction(tx => {
         tx.executeSql(
             'INSERT INTO Machine (id, is_available) VALUES (?, ?)',
-            [id,  true],
+            [id,  1],
             (tx, results) => {
                 if (results.rowsAffected > 0) {
                     console.log('Máquina adicionada com sucesso!');
@@ -31,10 +31,14 @@ export function getMachines(db, callback) {
                 callback(result);
             },
             error => {
-                console.error('Erro ao obter as máquinas:', error);
-            }
+                console.error('Falha ao obter as máquinas:', error);
+            },
         );
-    });
+    }, error => {
+        console.error('Erro ao adicionar a máquina:', error);
+    }
+    
+    );
 }
 
 export function deleteMachine(db, machineId, callback=null){
@@ -52,12 +56,24 @@ export function deleteMachine(db, machineId, callback=null){
                 console.log('Falha ao deletar a máquina.');
             }
         },
-        error =>{ console.error("Erro ao deletar máquina") }
+        error =>{ console.error("Erro na transição de deletar máquina") }
 
         )
-    
     })
+}
 
-
+export function setAvailableMachine(db, machineId, isAvailable){
+    db.transaction(tx=>{
+    
+        tx.executeSql("UPDATE Machine SET is_available = ? WHERE id = ?",
+        [isAvailable, machineId],
+        (tx, results)=>{ console.log("Atualização realizada con sucesso")},
+        error=>{console.error("Falha ao atualizar máquina")}
+        )
+    
+    },
+    error =>{ console.error("Erro na transição de atualizar máquina") }
+    
+    )
 
 }
