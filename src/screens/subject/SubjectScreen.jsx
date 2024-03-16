@@ -15,7 +15,10 @@ import { addSubject, deleteSubject, updateSubject, getSubjects } from "../../sto
 import { dataContext } from "../../contexts/Data"
 
 export default function SubjectScreen(){
-    const {database, listSubject, setListSubject} = useContext(dataContext)
+    const {database, 
+           listSubject, 
+           setListSubject, 
+           setSubjectSelected} = useContext(dataContext)
     const [modalVisible, setModalVisible] = useState(false);
     const [valueSubject, setValueSubject] = useState(null)
     const [startHour, setStartHour] = useState(null)
@@ -80,8 +83,13 @@ export default function SubjectScreen(){
             setError("disciplina já existe")
             return
         }
-        addSubject(database, valueSubject, startHour, endHour)
-        setListSubject([...listSubject, subjectObject])
+        addSubject(database, valueSubject, startHour, endHour,()=>{
+            setListSubject([...listSubject, subjectObject])
+            getSubjects(database, subjects=>{
+                setSubjectSelected(subjects[0])
+            })
+        
+        })
         setError("")
     }
 
@@ -145,6 +153,7 @@ export default function SubjectScreen(){
             setItemSelected(itemSelected)
             getSubjects(database, (subjects)=>{
                 setListSubject(subjects)
+                setSubjectSelected(subjects[0])
             })
         })
     }
@@ -155,6 +164,11 @@ export default function SubjectScreen(){
             setItemSelected(itemSelected)
             getSubjects(database, (subjects)=>{
                 setListSubject(subjects)
+                if(subjects.length > 0){
+                    setSubjectSelected(subjects[0])
+                }else{
+                    setSubjectSelected(null)
+                }
             })
         })
     }
