@@ -26,6 +26,7 @@ export default function MachineScreen(){
     const errorInvalideCodeString = "Código invalido"
 
     const addMachineHandler = () =>{
+        console.log();
         if(!valueInputMachine) {
             setError(errorInvalideCodeString)   
             return
@@ -35,7 +36,7 @@ export default function MachineScreen(){
             return
         }
 
-        if (! /^\d+$/.test(numericValue)) {
+        if (! /^\d+$/.test(valueInputMachine)) {
             setError(errorInvalideCodeString)
             return
         }
