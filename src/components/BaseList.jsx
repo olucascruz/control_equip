@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Alert, StyleSheet} from "react-native"
+import { View, Text, TouchableOpacity, StyleSheet} from "react-native"
 
 export default function BaseList({listItems, customFunc = null, ids=null}){
     const handleItemClick = (item, id) =>{
