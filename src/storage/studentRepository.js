@@ -1,4 +1,5 @@
 export function addStudent(db, id, name, callback=null) {
+
     db.transaction(tx => {
         tx.executeSql(
             'INSERT INTO Student (id, name) VALUES (?, ?)',
@@ -20,6 +21,7 @@ export function addStudent(db, id, name, callback=null) {
 
 // Função para obter todos os estudantes da tabela Student
 export function getStudents(db, callback) {
+
     db.transaction(tx => {
         tx.executeSql(
             'SELECT * FROM Student',
@@ -59,5 +61,25 @@ export function deleteStudent(db, studentId, callback=null){
     
     }, error =>{console.error("Error transition delete student: ",error)},
         ()=>{console.log("successful")})
+
+}
+
+
+export function getNameStudentById(db, studentId, callback=null){
+
+    db.transaction(tx=>{
+        
+        tx.executeSql( "SELECT name FROM Student WHERE id = ?",
+        [studentId],
+        (tx, results)=> {
+            console.log('consulta de nome de estudante realizada com sucesso!');
+            const result = results.rows._array;
+            if(typeof callback == "function"){
+               callback(result);
+            }
+
+        })
+    
+    })
 
 }

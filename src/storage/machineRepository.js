@@ -49,7 +49,7 @@ export function deleteMachine(db, machineId, callback=null){
         (tx, results)=>{
             if (results.rowsAffected > 0) {
                 console.log('Máquina deletada com sucesso!');
-                if (callback) {
+                if (typeof callback === "function") {
                     callback();
                 }
             } else {
@@ -62,12 +62,17 @@ export function deleteMachine(db, machineId, callback=null){
     })
 }
 
-export function setAvailableMachine(db, machineId, isAvailable){
+export function setAvailableMachine(db, machineId, isAvailable, callback=null){
     db.transaction(tx=>{
     
         tx.executeSql("UPDATE Machine SET is_available = ? WHERE id = ?",
         [isAvailable, machineId],
-        (tx, results)=>{ console.log("Atualização realizada con sucesso")},
+        (tx, results)=>{
+            console.log("Atualização realizada con sucesso")
+            if (typeof callback === "function") {
+                callback();
+            }
+        },
         error=>{console.error("Falha ao atualizar máquina")}
         )
     
