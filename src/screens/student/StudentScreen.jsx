@@ -22,8 +22,14 @@ import { addStudent, getStudents, deleteStudent } from "../../storage/studentRep
 import { addStudentToSubject } from "../../storage/studentSubjectRepository"
 
 
-export default function StudentScreen(){
-    const {database, listSubject, listStudent, setListStudent} = useContext(dataContext)
+export default function StudentScreen({navigation}){
+    const {database,
+           listSubject,
+           listStudent,
+           setListStudent,
+           subjectSelected,
+           setSubjectSelected} = useContext(dataContext)
+
     const [valueInputNameStudent, setValueInputNameStudent] = useState(null)
     const [valueInputCodeStudent, setValueInputCodeStudent] = useState(null)
     const [valueInputSubject, setValueInputSubject] = useState(null)
@@ -34,10 +40,10 @@ export default function StudentScreen(){
     const errorInvalideCodeString = "Campo matrícula inválido"
     
     const addStudentHandler = () =>{
-        if( !valueInputSubject ||
+        if( !subjectSelected ||
             !valueInputNameStudent || 
             !valueInputCodeStudent ) {
-                setError()
+                setError(errorFieldInvalideString)
                 return
             } 
         
@@ -46,7 +52,7 @@ export default function StudentScreen(){
             return
         }
 
-        if (! /^\d+$/.test(numericValue)) {
+        if (! /^\d+$/.test(valueInputCodeStudent)) {
             setError(errorInvalideCodeString)
             return
         }
@@ -96,10 +102,12 @@ export default function StudentScreen(){
             deleteFunc={handleDeleteStudent}
             />
             <Header headerTitle={"Estudantes"}/>
+
             <Text style={textStyles.error}>{error}</Text>
+
             <Text style={textStyles.label}>Disciplina:</Text>
-            {listStudent.length > 0 ?
-             <SubjectPicker disciplines={listSubject}  selectedHandler={setValueInputSubject}/>
+            {listSubject.length > 0 ?
+             <SubjectPicker disciplines={listSubject}  selectedHandler={setSubjectSelected}/>
              :
              <View style={buttonStyled.container}>
                 <Button onPress={()=>{navigation.navigate("Subject")}} color={colorAddButton} title="Registrar disciplina"/>
@@ -120,7 +128,7 @@ export default function StudentScreen(){
             
             <View style={buttonStyled.container} >
                 <Button
-                disabled={listStudent.length < 1} 
+                disabled={listSubject.length < 1} 
                 onPress={addStudentHandler}
                 color={colorAddButton}
                 title="adicionar estudante"/>
