@@ -14,8 +14,8 @@ import { textStyles } from "../../components/TextStyles";
 import { buttonStyled, colorAddButton } from "../../components/ButtonStyled";
 
 //Data and context
-import { setAvailableMachine } from "../../storage/machineRepository";
-import { addLoan, devolutionLoan } from "../../storage/loanRepository";
+import { setAvailableMachine, getMachines } from "../../storage/machineRepository";
+import { addLoan, getLoans } from "../../storage/loanRepository";
 import { dataContext } from "../../contexts/Data";
 
 export default function HomeScreen({navigation}){
@@ -26,7 +26,8 @@ export default function HomeScreen({navigation}){
           subjectSelected,
           setSubjectSelected,
           listStudent,
-          listMachine } = useContext(dataContext)
+          listMachine,
+          setListMachine } = useContext(dataContext)
 
     const [error, setError] = useState("")
     const [studentSelected, setStudentSelected] = useState(null)
@@ -43,16 +44,17 @@ export default function HomeScreen({navigation}){
             return      
         }
 
-        const computerLoan = {
-            "student": studentSelected.name,
-            "computer": machineSelected.id,
-        }
-
         addLoan(database, studentSelected.id , subjectSelected.id,           machineSelected.id, ()=>{
-                setListLoan([...listLoan, computerLoan])
-                const IsNotAvailable = 0
-                setAvailableMachine(database, machineSelected.id, IsNotAvailable)
-            })
+            getLoans(database, loans => setListLoan(loans))
+            const IsNotAvailable = 0
+            setAvailableMachine(
+                database, 
+                machineSelected.id, 
+                IsNotAvailable, 
+                () => getMachines(database, machines => setListMachine(machines)
+            )
+            )
+        })
     }
 
     const findStudent = (query) => {
@@ -141,7 +143,7 @@ export default function HomeScreen({navigation}){
             </View>
             
             <Text>{error}</Text>
-            <ListHome listLoans={listLoan}/>
+            <ListHome listLoans={listLoan} database={database} setListLoans={setListLoan} setMachines={setListMachine}/>
         </BaseView>
         )
 }
