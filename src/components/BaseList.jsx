@@ -39,10 +39,10 @@ const styles = StyleSheet.create({
         borderTopWidth: 0,
         borderLeftWidth: 0,
         borderRightWidth: 0,
-        paddingVertical: 10,
+        paddingVertical: 15,
         paddingHorizontal: 20,
         borderColor: 'gray',
-        marginVertical: 5,
+        marginVertical: 0,
     },
     textItemList:{
         fontWeight:"500"
