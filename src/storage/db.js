@@ -20,28 +20,28 @@ export function initDB(){
 
                 // Cria a tabela Student
                 tx.executeSql(
-                    'CREATE TABLE IF NOT EXISTS Student (id INTEGER PRIMARY KEY, name TEXT)',
+                    'CREATE TABLE IF NOT EXISTS Student (id TEXT PRIMARY KEY, name TEXT)',
                     [],
                     ()=>{console.log("successful create Student")},
                     ()=>{console.error("error: create Student")});
         
                 // Cria a tabela Machine
                 tx.executeSql(
-                    'CREATE TABLE IF NOT EXISTS Machine (id INTEGER PRIMARY KEY, is_available INTEGER)',
+                    'CREATE TABLE IF NOT EXISTS Machine (id TEXT PRIMARY KEY, is_available INTEGER)',
                     [], 
                     ()=>{console.log("successful create Machine")}, 
                     ()=>{console.error("error: create Machine")})
                 
                 // Cria a tabela Loan   
                 tx.executeSql(
-                    'CREATE TABLE IF NOT EXISTS Loan (id INTEGER PRIMARY KEY AUTOINCREMENT, student INTEGER, machine INTEGER, subject INTEGER, loan_time TEXT, devolution_time TEXT, FOREIGN KEY (student) REFERENCES Student(id) ON DELETE NO ACTION, FOREIGN KEY (machine) REFERENCES Machine(id) ON DELETE NO ACTION, FOREIGN KEY (subject) REFERENCES Subject(id) ON DELETE NO ACTION)',
+                    'CREATE TABLE IF NOT EXISTS Loan (id INTEGER PRIMARY KEY AUTOINCREMENT, student TEXT, machine TEXT, subject INTEGER, loan_time TEXT, devolution_time TEXT, FOREIGN KEY (student) REFERENCES Student(id) ON DELETE NO ACTION, FOREIGN KEY (machine) REFERENCES Machine(id) ON DELETE NO ACTION, FOREIGN KEY (subject) REFERENCES Subject(id) ON DELETE NO ACTION)',
                     [],
                     ()=>{console.log("successful create Loan")},
                     ()=>{console.error("error: create Loan")});
                 
 
                 tx.executeSql(
-                    'CREATE TABLE IF NOT EXISTS Student_Subject (student INTEGER, subject INTEGER, PRIMARY KEY (student, subject), FOREIGN KEY (student) REFERENCES Student(id), FOREIGN KEY (subject) REFERENCES Subject(id))',
+                    'CREATE TABLE IF NOT EXISTS Student_Subject (student TEXT, subject INTEGER, PRIMARY KEY (student, subject), FOREIGN KEY (student) REFERENCES Student(id), FOREIGN KEY (subject) REFERENCES Subject(id))',
                     [],
                     ()=>{console.log("successful create Student_Subject")},
                     ()=>{console.error("error: create Student_Subject")});
