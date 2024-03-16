@@ -2,6 +2,7 @@ import { useState, createContext, useEffect} from "react";
 import { getSubjects } from "../storage/subjectRepository";
 import { getMachines } from "../storage/machineRepository";
 import { getStudents } from "../storage/studentRepository";
+import { getLoans } from "../storage/loanRepository";
 import { initDB, db } from "../storage/db";
 
 export const dataContext = createContext({})
@@ -10,7 +11,9 @@ function DataProvider({children}){
     const [listSubject, setListSubject] = useState([])
     const [listMachine, setListMachine] = useState([])
     const [listStudent, setListStudent] = useState([])
+    const [listLoan, setListLoan] = useState([])
     const [database, setDatabase] = useState(null)
+    const [subjectSelected, setSubjectSelected] = useState(null)
 
 
     useEffect(()=>{
@@ -25,6 +28,10 @@ function DataProvider({children}){
                 //Define o estado de listSubject o resultado da consulta
                 setListSubject(subjects)
                 console.log("my subjects:", subjects)
+                if(subjects.length > 0){
+
+                    setSubjectSelected(subjects[0])
+                }
             })
 
             getMachines(db, machines =>{
@@ -38,13 +45,26 @@ function DataProvider({children}){
                 console.log("my student:", students)
             })
 
+            getLoans(db, loans =>{
+                setListLoan(loans)
+                console.log("my loans:", loans)
+                
+                
+            })
+            
             setDatabase(db)
         }, 700)  
         
     },[])
 
     return(
-        <dataContext.Provider value={{database, listSubject, setListSubject, listStudent, setListStudent, listMachine, setListMachine}}>
+        <dataContext.Provider value={
+        {database,
+         listSubject, setListSubject,
+         listStudent, setListStudent,
+         listMachine, setListMachine,
+         listLoan, setListLoan,
+         subjectSelected, setSubjectSelected}}>
             {children}
         </dataContext.Provider>
         )
