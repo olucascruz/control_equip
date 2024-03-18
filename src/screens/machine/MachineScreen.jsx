@@ -46,7 +46,9 @@ export default function MachineScreen(){
     }
     
     const listMachineFormatted = listMachine.map(machine =>{
-        const content = machine.id
+        console.log(machine)
+        const isAvailable = machine.is_available ? "disponível":"indisponível"
+        const content = `${machine.id} - ${isAvailable}`
         return content
     })
     const ids = listMachine.map((machine)=>{return machine.id})
