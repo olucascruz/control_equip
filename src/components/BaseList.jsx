@@ -1,6 +1,8 @@
 import { View, Text, TouchableOpacity, StyleSheet} from "react-native"
 
 export default function BaseList({listItems, customFunc = null, ids=null}){
+    if(typeof listItems != "object") return null
+
     const handleItemClick = (item, id) =>{
         const itemSelected = {content:item, id:id}
         if(customFunc) customFunc(itemSelected)
