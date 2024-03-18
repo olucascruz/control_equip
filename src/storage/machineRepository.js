@@ -1,6 +1,6 @@
 
 
-export function addMachine(db, id) {
+export function addMachine(db, id, callback=null) {
     db.transaction(tx => {
         tx.executeSql(
             'INSERT INTO Machine (id, is_available) VALUES (?, ?)',
@@ -8,6 +8,9 @@ export function addMachine(db, id) {
             (tx, results) => {
                 if (results.rowsAffected > 0) {
                     console.log('Máquina adicionada com sucesso!');
+                    if(typeof callback == "function"){
+                        callback()
+                    }
                 } else {
                     console.log('Falha ao adicionar a máquina.');
                 }
