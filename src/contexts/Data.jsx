@@ -3,6 +3,7 @@ import { getSubjects } from "../storage/subjectRepository";
 import { getMachines } from "../storage/machineRepository";
 import { getStudents } from "../storage/studentRepository";
 import { getLoans } from "../storage/loanRepository";
+import { getStudentSubject } from "../storage/studentSubjectRepository";
 import { initDB, db } from "../storage/db";
 
 export const dataContext = createContext({})
@@ -11,6 +12,7 @@ function DataProvider({children}){
     const [listSubject, setListSubject] = useState([])
     const [listMachine, setListMachine] = useState([])
     const [listStudent, setListStudent] = useState([])
+    const [listStudentSubject, setListStudentSubject] = useState([])
     const [listLoan, setListLoan] = useState([])
     const [database, setDatabase] = useState(null)
     const [subjectSelected, setSubjectSelected] = useState(null)
@@ -27,9 +29,7 @@ function DataProvider({children}){
             getSubjects(db, subjects => {
                 //Define o estado de listSubject o resultado da consulta
                 setListSubject(subjects)
-                console.log("my subjects:", subjects)
                 if(subjects.length > 0){
-
                     setSubjectSelected(subjects[0])
                 }
             })
@@ -37,21 +37,19 @@ function DataProvider({children}){
             getMachines(db, machines =>{
                 //Define o estado de listMachine o resultado da consulta
                 setListMachine(machines)
-                console.log("my machine:", machines)
             })
 
             getStudents(db, students=>{
                 setListStudent(students)
-                console.log("my student:", students)
             })
 
             getLoans(db, loans =>{
                 setListLoan(loans)
-                console.log("my loans:", loans)
-                
-                
             })
             
+            getStudentSubject(db, studentSubject => {
+                setListStudentSubject(studentSubject)
+            })
             setDatabase(db)
         }, 700)  
         
@@ -64,7 +62,8 @@ function DataProvider({children}){
          listStudent, setListStudent,
          listMachine, setListMachine,
          listLoan, setListLoan,
-         subjectSelected, setSubjectSelected}}>
+         subjectSelected, setSubjectSelected,
+         listStudentSubject}}>
             {children}
         </dataContext.Provider>
         )
