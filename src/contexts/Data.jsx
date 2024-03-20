@@ -63,7 +63,7 @@ function DataProvider({children}){
          listMachine, setListMachine,
          listLoan, setListLoan,
          subjectSelected, setSubjectSelected,
-         listStudentSubject}}>
+         listStudentSubject, setListStudentSubject}}>
             {children}
         </dataContext.Provider>
         )
