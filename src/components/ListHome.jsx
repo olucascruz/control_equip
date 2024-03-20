@@ -46,15 +46,16 @@ export default function ListHome({database, listLoans, setListLoans, setMachines
                     <View key={index} style={styles.itemList}>
                         <View style={styles.contentText}>
                         <Text>{loan.devolution_time}</Text>
-                        <Text>
+                        <Text style={styles.textItemList}>
                             Estudante: {studentsNames[index]}
                         </Text> 
                         
-                        <Text>
+                        <Text style={styles.textItemList}>
                             Computador: {loan.machine}
                         </Text>
                         </View>
-                        <Button 
+                        <Button
+                        color={"#189605"}
                         onPress={()=>{devolution(loan)}}
                         title="Devolvido"/>
                     </View>
@@ -72,27 +73,32 @@ const styles = StyleSheet.create({
         marginTop:20,
         backgroundColor:"#fff",
         width:"100%",
+        alignItems:"center",
     },
     itemList:{
         display:"flex",
-        flexDirection:"row",
-        width:"100%",    
+        flexDirection:"row",   
         alignContent:"space-between",
-        borderBottomWidth:1,
-        padding:20,
-        borderColor: 'black', // Define a cor da borda
-        alignItems:"center",
-        margin:"auto"
+        display: "flex",
+        borderWidth: 5,
+        width: "100%",
+        height:"auto",
+        alignItems: "center",
+        borderTopWidth: 0,
+        borderLeftWidth: 0,
+        borderRightWidth: 0,
+        paddingVertical: 15,
+        paddingHorizontal: 20,
+        borderColor: 'gray',
+        marginVertical: 0,
     },
     contentText:{
-        display:"flex",
-        alignItems:"flex-start",
-        alignContent:"center",
-        fontSize:"50",
-        backgroundColor:"pink",
-        margin:"auto",
-        padding:"auto"
-    
+        marginRight:"auto",
+        marginBottom:15,
+    },
+
+    textItemList:{
+        fontWeight:"500",
     },
 
 
