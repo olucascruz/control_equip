@@ -7,7 +7,7 @@ export function addStudent(db, id, name, callback=null) {
             (tx, results) => {
                 if (results.rowsAffected > 0) {
                     console.log('Estudante adicionado com sucesso!');
-                    if(callback)callback()
+                    if(typeof callback === "function")callback()
                 } else {
                     console.log('Falha ao adicionar o estudante.');
                 }
@@ -16,6 +16,8 @@ export function addStudent(db, id, name, callback=null) {
                 console.error('Erro ao adicionar o estudante:', error);
             }
         );
+    }, error => {
+        console.error('Erro na transação ao adicionar o estudante:', error);
     });
 }
 
@@ -53,7 +55,6 @@ export function deleteStudent(db, studentId, callback=null){
             } else {
             console.log('Falha ao deletar o estudante.');
             }
-            console.log("end delete student")
         },
         error=>{console.error("Erro ao deletar estudante", error)}
         
@@ -61,7 +62,6 @@ export function deleteStudent(db, studentId, callback=null){
     
     }, error =>{console.error("Error transition delete student: ",error)},
         ()=>{console.log("successful")})
-
 }
 
 
