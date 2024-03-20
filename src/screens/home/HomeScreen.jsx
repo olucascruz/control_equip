@@ -21,30 +21,72 @@ import { dataContext } from "../../contexts/Data";
 export default function HomeScreen({navigation}){
     const {database,
           listSubject,
-          listLoan,
-          setListLoan,
-          subjectSelected,
-          setSubjectSelected,
+          listLoan, setListLoan,
+          subjectSelected, setSubjectSelected,
           listStudent,
-          listMachine,
-          setListMachine } = useContext(dataContext)
-
+          listMachine, setListMachine,
+          listStudentSubject } = useContext(dataContext)
+    
+    
     const [error, setError] = useState("")
     const [studentSelected, setStudentSelected] = useState(null)
     const [machineSelected, setMachineSelected] = useState(null)
     const [studentsFound, setStudentsFound] = useState([])
+    const [queryStudent, setQueryStudent] = useState("")
+    const [queryMachine, setQueryMachine] = useState("")
+
     const [machinesFound, setMachinesFound] = useState([])
-
-
     const errorInvalideFieldsString = "Campos inválidos"
 
     const handleAddLoan = ()=>{
+        //Pega o objeto pelo nome || id
+
+        const idsStudentsInSubject = listStudentSubject
+        .filter(studentSubject => studentSubject.subject === subjectSelected.id)
+        .map(studentSubject => studentSubject.student);
+
+
+        const studentsInSubjectSelected = listStudent.filter(students =>{
+            return idsStudentsInSubject.includes(students.id);
+        })
+
+        if(queryStudent.length > 0){
+            for(const student of studentsInSubjectSelected){
+                if(queryStudent.toLowerCase() == student.name.toLowerCase()){
+                    setStudentSelected(student)
+                }
+            }
+        }
+
+        if(queryMachine.length > 0){
+            for(const machine of listMachine){
+                if(machine.id == queryMachine){
+                    setMachineSelected(machine)
+                }
+            }
+        }
+
+
+        if(!studentSelected ||typeof studentSelected != "object"){
+            setError("estudante não existe.")
+            return
+        } 
+        if(!machineSelected || typeof machineSelected != "object"){
+            setError("computador não existe.")
+            return
+        } 
+        
+
+        if(!machineSelected.is_available){
+            setError("computador não está disponível.")
+            return
+        } 
         if (!studentSelected.name && !machineSelected.id){ 
             setError(errorInvalideFieldsString)    
             return      
         }
 
-        addLoan(database, studentSelected.id , subjectSelected.id,           machineSelected.id, ()=>{
+        addLoan(database, studentSelected.id, subjectSelected.id, machineSelected.id, ()=>{
             getLoans(database, loans => setListLoan(loans))
             const IsNotAvailable = 0
             setAvailableMachine(
@@ -56,8 +98,9 @@ export default function HomeScreen({navigation}){
             )
         })
     }
-
+ 
     const findStudent = (query) => {
+        setQueryStudent(query)
         if(query.length === 0){
             setStudentsFound([]);
             return
@@ -69,6 +112,7 @@ export default function HomeScreen({navigation}){
     }
 
     const findMachine = (query) =>{
+        setQueryMachine(query)
         if(query.length === 0){
             setMachinesFound([]);
             return
@@ -86,7 +130,7 @@ export default function HomeScreen({navigation}){
             <Text style={textStyles.label}>Disciplina:</Text>
             {
             listSubject.length > 0 ?
-             <SubjectPicker disciplines={listSubject} selectedHandler={setSubjectSelected}/>
+             <SubjectPicker disciplines={listSubject} selectedHandler={setSubjectSelected} selectedValue={subjectSelected}/>
             :
             <View style={buttonStyled.container}>
                 <Button onPress={()=>{navigation.navigate("Subject")}} color={colorAddButton} title="Registrar disciplina"/>
@@ -97,17 +141,24 @@ export default function HomeScreen({navigation}){
             
             <TextInput
              style={inputStyled.input}
-             value={studentSelected ? studentSelected.name : null}
+             value={queryStudent}
+             onBlur={()=> setStudentsFound([])}
              onChangeText={findStudent}
              id={"iStudent"}
-             placeholder="Buscar estudante"/>
+             placeholder="Buscar estudante"
+             maxLength={45}/>
+
+
              {studentsFound.length > 0 ?
               <View style={styles.autocomplete}>
                 {studentsFound.map(student=>{
                 return (
                 <TouchableOpacity
                  key={student.id}
-                 onPress={() => setStudentSelected(student)}>
+                 onPress={() =>{
+                    setStudentsFound([])
+                    setQueryStudent(student.name)}
+                 }>
                     <Text>{student.name}</Text>
                 </TouchableOpacity>)
                 })}
@@ -119,11 +170,13 @@ export default function HomeScreen({navigation}){
 
             <TextInput 
             style={inputStyled.input} 
-            value={machineSelected ? machineSelected.id: null}
-            onChangeText={findMachine} 
+            value={queryMachine}
+            onChangeText={findMachine}
+            onBlur={()=>setMachinesFound([])}
             keyboardType="numeric"
             id={"iComputer"} 
-            placeholder="Buscar computador"/>
+            placeholder="Buscar computador"
+            maxLength={10}/>
 
             {machinesFound.length > 0 ?
               <View style={styles.autocomplete}>
@@ -131,7 +184,10 @@ export default function HomeScreen({navigation}){
                 return (
                 <TouchableOpacity
                  key={machine.id}
-                 onPress={() => setMachineSelected(machine)}>
+                 onPress={() => {
+                 setMachinesFound([])
+                 setQueryMachine(machine.id)
+                 }}>
                     <Text>{machine.id}</Text>
                 </TouchableOpacity>)
                 })}
@@ -142,7 +198,7 @@ export default function HomeScreen({navigation}){
                 <Button disabled={listSubject.length < 1 } onPress={handleAddLoan} color={colorAddButton} title="Registrar empréstimo"/>
             </View>
             
-            <Text>{error}</Text>
+            <Text style={textStyles.error}>{error}</Text>
             <ListHome listLoans={listLoan} database={database} setListLoans={setListLoan} setMachines={setListMachine}/>
         </BaseView>
         )
