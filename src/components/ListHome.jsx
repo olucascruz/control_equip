@@ -44,6 +44,7 @@ export default function ListHome({database, listLoans, setListLoans, setMachines
                 :
                 (      
                     <View key={index} style={styles.itemList}>
+                        <View style={styles.contentText}>
                         <Text>{loan.devolution_time}</Text>
                         <Text>
                             Estudante: {studentsNames[index]}
@@ -52,7 +53,7 @@ export default function ListHome({database, listLoans, setListLoans, setMachines
                         <Text>
                             Computador: {loan.machine}
                         </Text>
-                        
+                        </View>
                         <Button 
                         onPress={()=>{devolution(loan)}}
                         title="Devolvido"/>
@@ -67,19 +68,32 @@ export default function ListHome({database, listLoans, setListLoans, setMachines
 
 const styles = StyleSheet.create({
     container:{
-        marginTop:20,
         display:"flex",
+        marginTop:20,
         backgroundColor:"#fff",
         width:"100%",
-        alignItems:"center",
     },
     itemList:{
         display:"flex",
-        borderTopWidth:1,
-        borderBottomWidth:1,
-        borderColor: 'black', // Define a cor da borda
+        flexDirection:"row",
         width:"100%",    
+        alignContent:"space-between",
+        borderBottomWidth:1,
+        padding:20,
+        borderColor: 'black', // Define a cor da borda
         alignItems:"center",
-    }
+        margin:"auto"
+    },
+    contentText:{
+        display:"flex",
+        alignItems:"flex-start",
+        alignContent:"center",
+        fontSize:"50",
+        backgroundColor:"pink",
+        margin:"auto",
+        padding:"auto"
+    
+    },
+
 
 })
