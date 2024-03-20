@@ -66,10 +66,13 @@ export default function SubjectScreen(){
             object['end_time'] == subjectObject['end_time']))
         return IsSubjectExists
     }
-    const addSubjectHandler = async () =>{
+    const addSubjectHandler = () =>{
         
         const isValide = validateSubject()
-        if(!isValide) return
+        if(!isValide){
+           setError("Campos de hora inválidos")
+            return
+        }
         const subjectObject = {
             "id":listSubject.length + 1,
             "name":valueSubject,
