@@ -26,7 +26,6 @@ export default function MachineScreen(){
     const errorInvalideCodeString = "Código invalido"
 
     const addMachineHandler = () =>{
-        console.log();
         if(!valueInputMachine) {
             setError(errorInvalideCodeString)   
             return
@@ -40,13 +39,14 @@ export default function MachineScreen(){
             setError(errorInvalideCodeString)
             return
         }
-        const codeMachine = {"id":valueInputMachine}
-        addMachine(database, valueInputMachine)
-        setListMachine([...listMachine, codeMachine])
+        addMachine(database, valueInputMachine, ()=>{
+            getMachines(database, machines => setListMachine(machines))
+        })
+        
+        setValueInputMachine("")
     }
     
     const listMachineFormatted = listMachine.map(machine =>{
-        console.log(machine)
         const isAvailable = machine.is_available ? "disponível":"indisponível"
         const content = `${machine.id} - ${isAvailable}`
         return content
@@ -92,7 +92,8 @@ export default function MachineScreen(){
                 <Button 
                 onPress={addMachineHandler}
                 color={colorAddButton}
-                title="Adicionar computador"/>
+                title="Adicionar computador"
+                />
             </View>
             <BaseList 
             listItems={listMachineFormatted}
