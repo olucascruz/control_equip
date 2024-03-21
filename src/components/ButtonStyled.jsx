@@ -8,4 +8,4 @@ export const buttonStyled = StyleSheet.create({
     },
 })
 
-export const colorAddButton = "#24F302"
+export const colorAddButton = "#20e901"
