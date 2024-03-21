@@ -117,13 +117,14 @@ export default function SubjectScreen(){
              style={inputStyled.input}
              value={valueSubject}
              onChangeText={setValueSubject} 
-             placeholder={"Nome da disciplina"}/>
-            <Text style={textStyles.label}>Hora início:</Text>
+             placeholder={"Nome da disciplina"}
+             maxLength={40}/>
+            <Text style={textStyles.label}>Hora de início:</Text>
             <HourInput
             value={startHour} 
             onValueChange={setStartHour} 
             placeholder={"Hora de inicio ex: 13:30"}/>
-            <Text style={textStyles.label}>Hora fim:</Text>
+            <Text style={textStyles.label}>Hora de fim:</Text>
             <HourInput
             value={endHour} 
             onValueChange={setEndHour} 
