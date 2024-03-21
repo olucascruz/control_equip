@@ -19,33 +19,54 @@ import { dataContext } from "../../contexts/Data"
 
 // Storage
 import { addStudent, getStudents, deleteStudent } from "../../storage/studentRepository"
-import { addStudentToSubject } from "../../storage/studentSubjectRepository"
+import { addStudentToSubject, deleteStudentSubject, getStudentSubject } from "../../storage/studentSubjectRepository"
 
 
 export default function StudentScreen({navigation}){
-    const {database,
-           listSubject,
-           listStudent,
-           setListStudent,
-           subjectSelected,
-           setSubjectSelected} = useContext(dataContext)
-
-    const [valueInputNameStudent, setValueInputNameStudent] = useState(null)
-    const [valueInputCodeStudent, setValueInputCodeStudent] = useState(null)
-    const [valueInputSubject, setValueInputSubject] = useState(null)
-    const [modalVisible, setModalVisible] = useState(false);
-    const [error, setError] = useState("")
-    const [itemSelected, setItemSelected] = useState("")
-    const errorFieldInvalideString = "Campos inválidos"
-    const errorInvalideCodeString = "Campo matrícula inválido"
+    const { database,
+            listSubject,
+            listStudent,
+            setListStudent,
+            subjectSelected,
+            setSubjectSelected,
+            listStudentSubject,
+            setListStudentSubject } = useContext(dataContext)
     
+    //forms states
+    const [valueInputNameStudent, setValueInputNameStudent] = useState("")
+    const [valueInputCodeStudent, setValueInputCodeStudent] = useState("")
+    const [error, setError] = useState("")
+
+    //modal states
+    const [modalVisible, setModalVisible] = useState(false);
+    const [itemSelected, setItemSelected] = useState("")
+    
+    const studentsInSubject = listStudentSubject.filter(studentSubject=>{
+        return studentSubject.subject === subjectSelected.id
+    }).map(studentSubject => studentSubject.student)
+    
+
     const addStudentHandler = () =>{
-        if( !subjectSelected ||
-            !valueInputNameStudent || 
-            !valueInputCodeStudent ) {
-                setError(errorFieldInvalideString)
-                return
-            } 
+        const subjectFieldError = "Campo de disciplina inválido"
+        const nameFieldError = "Campo de name inválido"
+        const codeFieldError = "Campo de code inválido"
+        const errorInvalideCodeString = "Campo matrícula inválido"
+
+
+        if(!subjectSelected){
+            setError(subjectFieldError)
+            return
+        }
+
+        if(!valueInputNameStudent){
+            setError(nameFieldError)
+            return
+        }       
+
+        if(!valueInputCodeStudent) {
+            setError(codeFieldError)
+            return
+        }
         
         if(valueInputCodeStudent.length < 10){ 
             setError(errorInvalideCodeString)
@@ -57,24 +78,67 @@ export default function StudentScreen({navigation}){
             return
         }
 
-
-        const newStudent = {
-            "id": valueInputCodeStudent,
-            "name": valueInputNameStudent
+        for(const studentId of studentsInSubject){
+            if (studentId === valueInputCodeStudent){
+                setError("Usuário já adicionado na disciplina.")
+                return
+            }
         }
-        addStudent(database, valueInputCodeStudent, valueInputNameStudent,
-            ()=>{
-                addStudentToSubject(database, valueInputCodeStudent, valueInputSubject)
-                setListStudent([...listStudent, newStudent])    
-            })
-    
+
+        const listStudentInSubject =  listStudent.filter(student => {
+            return studentsInSubject.includes(student.id);
+        })
+        for(const student of listStudentInSubject){
+            if(student.name.toLowerCase() === valueInputNameStudent.toLowerCase()){
+                setError("Nome de usuário já adicionado.")
+                return
+            }
+        }
+
+       // Se o estudante não estiver na disciplina, mas já estiver na lista de estudantes
+        const existingStudent = listStudent.find(student => student.id === valueInputCodeStudent);
+
+        if (existingStudent) {
+            // Adicionar o estudante à disciplina
+            addStudentToSubject(database, valueInputCodeStudent, subjectSelected.id, () => {
+               
+                getStudentSubject(database, studentSubject => {
+                    setListStudentSubject(studentSubject);
+                });
+            
+            });
+        } else {
+            // Se o estudante não estiver na lista de estudantes, adicioná-lo ao banco de dados e, em seguida, à disciplina
+            addStudent(database, valueInputCodeStudent, valueInputNameStudent, () => {
+                
+                getStudents(database, students => {
+                    setListStudent(students);
+                    
+                    // Após adicionar o estudante ao banco de dados, adicionar à disciplina
+                    addStudentToSubject(database, valueInputCodeStudent, subjectSelected.id, () => {
+                        getStudentSubject(database, studentSubject => {
+                            setListStudentSubject(studentSubject);
+                        });
+                    });
+                });
+            });
     }
 
-    const listStudentFormatted = listStudent.map(student=>{
-        const content = `${student.name} \nMatrícula: ${student.id}`
-        return content
-    })
-    const ids = listStudent.map(student=>{ return student.id})
+    // Limpar campos de entrada após adicionar o estudante
+    setValueInputCodeStudent("");
+    setValueInputNameStudent("");
+};
+
+    
+
+    const listStudentFormatted =  listStudent.filter(student => {
+        return studentsInSubject.includes(student.id);
+    }).map(student => {
+        // Formata um texto e o coloca na lista de conteúdo
+        return `${student.name} \nMatrícula: ${student.id}`;
+    }); 
+    
+    const ids = listStudent.map(student=> student.id)
 
     const onClickItemList = (itemSelected) => {
         setModalVisible(true)
@@ -83,14 +147,24 @@ export default function StudentScreen({navigation}){
 
 
     const handleDeleteStudent = () => {
-        deleteStudent(database, itemSelected.id, ()=>{
-            itemSelected["feedback"] = "item deletado com sucesso"
+        deleteStudentSubject(database, itemSelected.id, subjectSelected.id, ()=>{
+            itemSelected["feedback"] = "Estudante deletado com sucesso"
             setItemSelected(itemSelected)
-            getStudents(database, students =>{
-                setListStudent(students)
-           })   
-        })
-    
+            getStudentSubject(database, studentsSubject => {
+                setListStudentSubject(studentsSubject);
+                // Verifica se o estudante ainda está associado a alguma disciplina 
+                const stillEnrolled = studentsSubject.some(
+                    studentSubject => studentSubject.student === itemSelected.id
+                );
+
+                // Se o estudante não estiver mais associado a nenhuma disciplina, exclui completamente do banco de dados
+                if (!stillEnrolled) {
+                    deleteStudent(database, itemSelected.id);
+                }
+
+
+            });   
+        })    
     }
     return(
         <BaseView>
@@ -107,7 +181,7 @@ export default function StudentScreen({navigation}){
 
             <Text style={textStyles.label}>Disciplina:</Text>
             {listSubject.length > 0 ?
-             <SubjectPicker disciplines={listSubject}  selectedHandler={setSubjectSelected}/>
+             <SubjectPicker disciplines={listSubject}  selectedHandler={setSubjectSelected} selectedValue={subjectSelected}/>
              :
              <View style={buttonStyled.container}>
                 <Button onPress={()=>{navigation.navigate("Subject")}} color={colorAddButton} title="Registrar disciplina"/>
@@ -116,12 +190,15 @@ export default function StudentScreen({navigation}){
             <Text style={textStyles.label}>Nome do estudante:</Text>
             <TextInput style={inputStyled.input} 
             onChangeText={setValueInputNameStudent}
-            placeholder={"Nome do estudante"}/>
+            placeholder={"Nome do estudante"}
+            value={valueInputNameStudent}
+            maxLength={45}/>
 
             <Text style={textStyles.label}>Número de matrícula:</Text>
             <TextInput style={inputStyled.input}
             onChangeText={setValueInputCodeStudent}
             placeholder={"Número de matrícula"}
+            value={valueInputCodeStudent}
             keyboardType="numeric"
             maxLength={10}
             />
