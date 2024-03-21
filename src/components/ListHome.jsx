@@ -57,7 +57,7 @@ export default function ListHome({database, listLoans, setListLoans, setMachines
                         <Button
                         color={"#189605"}
                         onPress={()=>{devolution(loan)}}
-                        title="Devolvido"/>
+                        title="Devolver"/>
                     </View>
                 )         
             }) : null
