@@ -1,4 +1,19 @@
 {
   "name": "control_equip",
-  "displayName": "control_equip"
+  "displayName": "control_equip",
+  "extra": {
+    "eas": {
+      "projectId": "c9b57128-e398-418e-8419-cd9a22781003"
+    }
+  },
+  "expo": {
+    "android": {
+      "package": "com.olucascruz.control_equip"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c9b57128-e398-418e-8419-cd9a22781003"
+      }
+    }
+  }
 }
