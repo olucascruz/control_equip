@@ -10,6 +10,9 @@
     "android": {
       "package": "com.olucascruz.control_equip"
     },
+    "splash": {
+      "backgroundColor": "#FEF9B0"
+    },
     "extra": {
       "eas": {
         "projectId": "c9b57128-e398-418e-8419-cd9a22781003"
