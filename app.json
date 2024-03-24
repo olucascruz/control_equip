@@ -1,17 +1,19 @@
 {
   "name": "control_equip",
-  "displayName": "control_equip",
+  "displayName": "controle de equipamento",
   "extra": {
     "eas": {
       "projectId": "c9b57128-e398-418e-8419-cd9a22781003"
     }
   },
   "expo": {
+    "icon": "src/assets/iconControlEquip.png",
     "android": {
       "package": "com.olucascruz.control_equip"
     },
     "splash": {
-      "backgroundColor": "#FEF9B0"
+      "image": "src/assets/iconControlEquip.png",
+      "backgroundColor": "#18743F"
     },
     "extra": {
       "eas": {
