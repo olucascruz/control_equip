@@ -66,37 +66,48 @@ export default function HomeScreen({navigation}){
             }
         }
 
+        setTimeout(()=>{
+            if(!studentSelected){
+                setError("estudante não existe.")
+                return
+            } 
+            if(!machineSelected){
+                setError("computador não existe.")
+                return
+            } 
+            
+            if(!machineSelected.is_available){
+                setError("computador não está disponível.")
+                return
+            } 
+            if (!studentSelected.name && !machineSelected.id){ 
+                setError(errorInvalideFieldsString)    
+                return      
+            }
 
-        if(!studentSelected ||typeof studentSelected != "object"){
-            setError("estudante não existe.")
-            return
-        } 
-        if(!machineSelected || typeof machineSelected != "object"){
-            setError("computador não existe.")
-            return
-        } 
+
+
+            addLoan(database, studentSelected.id, subjectSelected.id, machineSelected.id, ()=>{
+                getLoans(database, loans => setListLoan(loans))
+                const IsNotAvailable = 0
+                setAvailableMachine(
+                    database, 
+                    machineSelected.id, 
+                    IsNotAvailable, 
+                    () => getMachines(database, machines => setListMachine(machines)
+                )
+                )
+            })
+    
+            setError("")
+            setQueryMachine("")
+            setQueryStudent("")
+            setStudentSelected(null)
+            setMachineSelected(null)
+    
+        }, 500)
         
 
-        if(!machineSelected.is_available){
-            setError("computador não está disponível.")
-            return
-        } 
-        if (!studentSelected.name && !machineSelected.id){ 
-            setError(errorInvalideFieldsString)    
-            return      
-        }
-
-        addLoan(database, studentSelected.id, subjectSelected.id, machineSelected.id, ()=>{
-            getLoans(database, loans => setListLoan(loans))
-            const IsNotAvailable = 0
-            setAvailableMachine(
-                database, 
-                machineSelected.id, 
-                IsNotAvailable, 
-                () => getMachines(database, machines => setListMachine(machines)
-            )
-            )
-        })
     }
  
     const findStudent = (query) => {
@@ -142,7 +153,11 @@ export default function HomeScreen({navigation}){
             <TextInput
              style={inputStyled.input}
              value={queryStudent}
-             onBlur={()=> setStudentsFound([])}
+             onBlur={() =>
+                setTimeout(()=>{    
+                    setStudentsFound([])
+                }, 800)
+            }
              onChangeText={findStudent}
              id={"iStudent"}
              placeholder="Buscar estudante"
@@ -154,10 +169,12 @@ export default function HomeScreen({navigation}){
                 {studentsFound.map(student=>{
                 return (
                 <TouchableOpacity
+                 style={styles.itemAutocomplete}
                  key={student.id}
                  onPress={() =>{
-                    setStudentsFound([])
-                    setQueryStudent(student.name)}
+                    setQueryStudent(student.name)
+                    setStudentsFound([])   
+                }
                  }>
                     <Text>{student.name}</Text>
                 </TouchableOpacity>)
@@ -172,7 +189,11 @@ export default function HomeScreen({navigation}){
             style={inputStyled.input} 
             value={queryMachine}
             onChangeText={findMachine}
-            onBlur={()=>setMachinesFound([])}
+            onBlur={()=>{
+                setTimeout(()=>{    
+                    setMachinesFound([])
+                }, 800)
+            }}
             keyboardType="numeric"
             id={"iComputer"} 
             placeholder="Buscar computador"
@@ -183,10 +204,11 @@ export default function HomeScreen({navigation}){
                 {machinesFound.map(machine=>{
                 return (
                 <TouchableOpacity
+                 style={styles.itemAutocomplete}
                  key={machine.id}
                  onPress={() => {
-                 setMachinesFound([])
-                 setQueryMachine(machine.id)
+                    setQueryMachine(machine.id)
+                    setMachinesFound([])
                  }}>
                     <Text>{machine.id}</Text>
                 </TouchableOpacity>)
@@ -206,12 +228,20 @@ export default function HomeScreen({navigation}){
 
 const styles = StyleSheet.create({
     autocomplete:{
-        backgroundColor:"white",
+        flex:1,
+        backgroundColor:"#ffffff",
         width:"70%",
         alignItems:"flex-start",
-        paddingLeft:20,
+        paddingLeft:10,
         marginTop: -20,
         borderTopWidth: 0.5,
+    },
+
+    itemAutocomplete:{ 
+        flex:1,
+        height: 40,
+        width:"100%",
+        justifyContent: "center"
     }
 
 })
