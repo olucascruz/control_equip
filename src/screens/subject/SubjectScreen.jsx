@@ -93,7 +93,7 @@ export default function SubjectScreen(){
             })
         
         })
-        setError("")
+        cleanInputs()
     }
 
     const listSubjectFormatted = listSubject.map((subject)=>{
@@ -198,8 +198,12 @@ export default function SubjectScreen(){
             {Inputs()}
 
             <View style={buttonStyled.container}>
-                <Button onPress={addSubjectHandler} color={colorAddButton} title="Adicionar disciplina"/>
+                <Button 
+                onPress={addSubjectHandler} 
+                color={colorAddButton} 
+                title="Adicionar disciplina"/>
             </View>
+            
             <BaseList
             listItems={listSubjectFormatted}
             customFunc={onClickItemList}

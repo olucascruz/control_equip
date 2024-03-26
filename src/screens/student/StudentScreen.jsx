@@ -214,6 +214,6 @@ export default function StudentScreen({navigation}){
             listItems={listStudentFormatted} 
             ids={ids} 
             customFunc={onClickItemList}/>
-            </BaseView>
+        </BaseView>
     )
 }
