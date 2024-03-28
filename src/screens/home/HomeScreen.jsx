@@ -29,8 +29,6 @@ export default function HomeScreen({navigation}){
     
     
     const [error, setError] = useState("")
-    const [studentSelected, setStudentSelected] = useState(null)
-    const [machineSelected, setMachineSelected] = useState(null)
     const [studentsFound, setStudentsFound] = useState([])
     const [queryStudent, setQueryStudent] = useState("")
     const [queryMachine, setQueryMachine] = useState("")
@@ -40,6 +38,8 @@ export default function HomeScreen({navigation}){
 
     const handleAddLoan = ()=>{
         //Pega o objeto pelo nome || id
+        let studentSelected = null
+        let machineSelected = null
 
         const idsStudentsInSubject = listStudentSubject
         .filter(studentSubject => studentSubject.subject === subjectSelected.id)
@@ -53,61 +53,56 @@ export default function HomeScreen({navigation}){
         if(queryStudent.length > 0){
             for(const student of studentsInSubjectSelected){
                 if(queryStudent.toLowerCase() == student.name.toLowerCase()){
-                    setStudentSelected(student)
+                    studentSelected = student
                 }
             }
+            if(!studentSelected){
+                setError("estudante não existe.")
+                return
+            } 
         }
 
         if(queryMachine.length > 0){
             for(const machine of listMachine){
                 if(machine.id == queryMachine){
-                    setMachineSelected(machine)
+                    machineSelected = machine
                 }
             }
-        }
-
-        setTimeout(()=>{
-            if(!studentSelected){
-                setError("estudante não existe.")
-                return
-            } 
             if(!machineSelected){
                 setError("computador não existe.")
                 return
-            } 
-            
-            if(!machineSelected.is_available){
-                setError("computador não está disponível.")
-                return
-            } 
-            if (!studentSelected.name && !machineSelected.id){ 
-                setError(errorInvalideFieldsString)    
-                return      
             }
+        }
+
+             
+            
+        if(!machineSelected.is_available){
+            setError("computador não está disponível.")
+            return
+        } 
+        if (!studentSelected.name && !machineSelected.id){ 
+            setError(errorInvalideFieldsString)    
+            return      
+        }
 
 
 
-            addLoan(database, studentSelected.id, subjectSelected.id, machineSelected.id, ()=>{
-                getLoans(database, loans => setListLoan(loans))
-                const IsNotAvailable = 0
-                setAvailableMachine(
-                    database, 
-                    machineSelected.id, 
-                    IsNotAvailable, 
-                    () => getMachines(database, machines => setListMachine(machines)
-                )
-                )
-            })
+        addLoan(database, studentSelected.id, subjectSelected.id, machineSelected.id, ()=>{
+            getLoans(database, loans => setListLoan(loans))
+            const IsNotAvailable = 0
+            setAvailableMachine(
+                database, 
+                machineSelected.id, 
+                IsNotAvailable, 
+                () => getMachines(database, machines => setListMachine(machines)
+            )
+            )
+        })
+
+        setError("")
+        setQueryMachine("")
+        setQueryStudent("")
     
-            setError("")
-            setQueryMachine("")
-            setQueryStudent("")
-            setStudentSelected(null)
-            setMachineSelected(null)
-    
-        }, 500)
-        
-
     }
  
     const findStudent = (query) => {
