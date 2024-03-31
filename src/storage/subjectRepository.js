@@ -23,9 +23,7 @@ export function addSubject(db, name, startTime, endTime, callback=null) {
 export function getSubjects(db, callback) {
 
     try {
-        console.log('Banco de dados aberto:', db);
         // Execute a consulta para obter as disciplinas
-
         db.transaction(tx => {
             tx.executeSql(
                 'SELECT * FROM Subject',
