@@ -13,14 +13,11 @@ export default function ListHome({database, listLoans, setListLoans, setMachines
 
             for (const loan of listLoans) {
                 getNameStudentById(database, loan.student, (studentName) => {
-                    names.push(studentName[0].name);
-                    console.log(studentName[0].name)
-                    console.log(names)
-                    // Se todos os nomes foram obtidos, definimos o estado
-                    if (names.length === listLoans.length) {
-                    console.log(names)
-
-                        setStudentsNames(names);
+                    if(studentName.length > 1){
+                        names.push(studentName[0].name);
+                        if (names.length === listLoans.length) {
+                            setStudentsNames(names);
+                        }
                     }
                 });
                 
