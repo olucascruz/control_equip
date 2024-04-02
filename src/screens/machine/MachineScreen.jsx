@@ -78,7 +78,6 @@ export default function MachineScreen(){
             deleteFunc={handleDeleteMachine}/>
             
             <Header headerTitle={"Computadores"}/>
-            <Text style={textStyles.error}>{error}</Text>
             <Text style={textStyles.label}>Adicione um computador:</Text>
             <TextInput 
             style={inputStyled.input} 
@@ -95,6 +94,7 @@ export default function MachineScreen(){
                 title="Adicionar computador"
                 />
             </View>
+            <Text style={textStyles.error}>{error}</Text>
             <BaseList 
             listItems={listMachineFormatted}
             customFunc={onClickItemList}

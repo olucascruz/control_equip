@@ -107,12 +107,11 @@ export default function SubjectScreen(){
         cleanInputs()
         setItemSelected(itemSelected)
     }
-    function Inputs(){
+    function Inputs(hasError = false){
         return(
             <>
             {/* -------- */}
-            <Text style={textStyles.error}>{error}</Text>
-            
+            {hasError ? <Text style={textStyles.error}>{error}</Text>:null}
             <TextInput
              style={inputStyled.input}
              value={valueSubject}
@@ -166,6 +165,7 @@ export default function SubjectScreen(){
         deleteSubject(database, itemSelected.id,()=>{
             itemSelected["feedback"] = "Item deletado"
             setItemSelected(itemSelected)
+            
             getSubjects(database, (subjects)=>{
                 setListSubject(subjects)
                 if(subjects.length > 0){
@@ -203,7 +203,7 @@ export default function SubjectScreen(){
                 color={colorAddButton} 
                 title="Adicionar disciplina"/>
             </View>
-            
+            <Text style={textStyles.error}>{error}</Text>
             <BaseList
             listItems={listSubjectFormatted}
             customFunc={onClickItemList}
