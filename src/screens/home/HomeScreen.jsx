@@ -55,27 +55,26 @@ export default function HomeScreen({navigation}){
                 if(queryStudent.toLowerCase() == student.name.toLowerCase()){
                     studentSelected = student
                 }
-            }
-            if(!studentSelected){
-                setError("estudante não existe.")
-                return
-            } 
+            }  
         }
+
+        if(!studentSelected){
+            setError("estudante não existe.")
+            return
+        } 
 
         if(queryMachine.length > 0){
             for(const machine of listMachine){
                 if(machine.id == queryMachine){
                     machineSelected = machine
                 }
-            }
-            if(!machineSelected){
-                setError("computador não existe.")
-                return
-            }
+            } 
         }
-
-             
-            
+        if(!machineSelected){
+            setError("computador não existe.")
+            return
+        }
+                    
         if(!machineSelected.is_available){
             setError("computador não está disponível.")
             return
@@ -85,8 +84,7 @@ export default function HomeScreen({navigation}){
             return      
         }
 
-
-
+        
         addLoan(database, studentSelected.id, subjectSelected.id, machineSelected.id, ()=>{
             getLoans(database, loans => setListLoan(loans))
             const IsNotAvailable = 0
@@ -105,6 +103,7 @@ export default function HomeScreen({navigation}){
     
     }
  
+
     const findStudent = (query) => {
         setQueryStudent(query)
         if(query.length === 0){
