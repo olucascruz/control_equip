@@ -60,7 +60,7 @@ export default function ModalEditDelete({
             <>
                 <Text style={textStyles.label}>Edite a disciplina:</Text>
                 
-                {Inputs ? Inputs():null}
+                {Inputs ? Inputs(hasError = true):null}
                 <View style={buttonStyled.container}>
                     <Button onPress={()=>{handleSubject("edit")}} color={colorAddButton} title="Editar"/>
                 </View>
