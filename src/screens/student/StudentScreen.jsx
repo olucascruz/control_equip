@@ -41,10 +41,25 @@ export default function StudentScreen({navigation}){
     const [modalVisible, setModalVisible] = useState(false);
     const [itemSelected, setItemSelected] = useState("")
     
-    const studentsInSubject = listStudentSubject.filter(studentSubject=>{
-        return studentSubject.subject === subjectSelected.id
-    }).map(studentSubject => studentSubject.student)
-    
+    let studentsInSubject = [];
+
+    if(subjectSelected){
+        studentsInSubject = listStudentSubject.filter(studentSubject=>{
+            return studentSubject.subject === subjectSelected.id
+        }).map(studentSubject => studentSubject.student)
+    }
+
+    let listStudentFormatted = []
+    try{
+        listStudentFormatted =  listStudent.filter(student => {
+            return studentsInSubject.includes(student.id);
+        }).map(student => {
+            // Formata um texto e o coloca na lista de conteúdo
+            return `${student.name} \nMatrícula: ${student.id}`;
+        }); 
+    }catch(err){
+        console.error(err)
+    }
 
     const addStudentHandler = () =>{
         const subjectFieldError = "Campo de disciplina inválido"
@@ -85,9 +100,14 @@ export default function StudentScreen({navigation}){
             }
         }
 
-        const listStudentInSubject =  listStudent.filter(student => {
-            return studentsInSubject.includes(student.id);
-        })
+        let listStudentInSubject = []
+        try{
+            listStudentInSubject =  listStudent.filter(student => {
+                return studentsInSubject.includes(student.id);
+            })
+        }catch(err){
+            console.error(err)
+        }
         for(const student of listStudentInSubject){
             if(student.name.toLowerCase() === valueInputNameStudent.toLowerCase()){
                 setError("Nome de usuário já adicionado.")
@@ -127,16 +147,8 @@ export default function StudentScreen({navigation}){
     // Limpar campos de entrada após adicionar o estudante
     setValueInputCodeStudent("");
     setValueInputNameStudent("");
-};
+    };
 
-    
-
-    const listStudentFormatted =  listStudent.filter(student => {
-        return studentsInSubject.includes(student.id);
-    }).map(student => {
-        // Formata um texto e o coloca na lista de conteúdo
-        return `${student.name} \nMatrícula: ${student.id}`;
-    }); 
     
     const ids = listStudent.map(student=> student.id)
 
@@ -145,8 +157,8 @@ export default function StudentScreen({navigation}){
         setItemSelected(itemSelected)
     }
 
-
     const handleDeleteStudent = () => {
+        if(!subjectSelected) return
         deleteStudentSubject(database, itemSelected.id, subjectSelected.id, ()=>{
             itemSelected["feedback"] = "Estudante deletado com sucesso"
             setItemSelected(itemSelected)
@@ -166,6 +178,8 @@ export default function StudentScreen({navigation}){
             });   
         })    
     }
+
+
     return(
         <BaseView>
             <ModalEditDelete
@@ -176,8 +190,6 @@ export default function StudentScreen({navigation}){
             deleteFunc={handleDeleteStudent}
             />
             <Header headerTitle={"Estudantes"}/>
-
-            <Text style={textStyles.error}>{error}</Text>
 
             <Text style={textStyles.label}>Disciplina:</Text>
             {listSubject.length > 0 ?
@@ -210,6 +222,8 @@ export default function StudentScreen({navigation}){
                 color={colorAddButton}
                 title="adicionar estudante"/>
             </View>
+            <Text style={textStyles.error}>{error}</Text>
+
             <BaseList 
             listItems={listStudentFormatted} 
             ids={ids} 
