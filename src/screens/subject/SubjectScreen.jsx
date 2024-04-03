@@ -74,7 +74,6 @@ export default function SubjectScreen(){
             return
         }
         const subjectObject = {
-            "id":listSubject.length + 1,
             "name":valueSubject,
             "start_time": startHour,
             "end_time": endHour
@@ -87,8 +86,8 @@ export default function SubjectScreen(){
             return
         }
         addSubject(database, valueSubject, startHour, endHour,()=>{
-            setListSubject([...listSubject, subjectObject])
             getSubjects(database, subjects=>{
+                setListSubject(subjects)
                 setSubjectSelected(subjects[0])
             })
         
@@ -103,6 +102,7 @@ export default function SubjectScreen(){
     const ids = listSubject.map((subject)=>{return subject.id})
 
     const onClickItemList = (itemSelected) => {
+        console.log(listSubject)
         setModalVisible(true)
         cleanInputs()
         setItemSelected(itemSelected)
