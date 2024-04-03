@@ -52,9 +52,14 @@ export function deleteSubject(db, subjectId, callback = null) {
             'DELETE FROM Subject WHERE id = ?',
             [subjectId],
             (tx, results) => {
-                console.log('Item excluído com sucesso!', results);
-                if (callback) {
-                    callback(results);
+                if (results.rowsAffected > 0) {
+                    console.log('Item excluído com sucesso!', results);
+                    if (typeof callback == "function") {
+                        callback(results);
+                    }
+                }else {
+                    console.log("subjectId:", subjectId)
+                    console.log('Falha ao excluir disciplina.');
                 }
             },
             (tx, error) => {
